@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TicketManager.DataContext.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+
+// Connection String
+builder.Services.AddDbContext<TicketDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dominik_TicketManagerContext")));
+
 
 // Adding Swagger
 builder.Services.AddEndpointsApiExplorer();

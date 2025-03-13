@@ -21,4 +21,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TicketManager.DataContext\TicketManager.DataContext.csproj" />
+    <ProjectReference Include="..\TicketManager.Services\TicketManager.Services.csproj" />
+  </ItemGroup>
+
 </Project>
