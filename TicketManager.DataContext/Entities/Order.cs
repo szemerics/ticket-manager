@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TicketManager.DataContext.Entities
+{
+    public class Order : AbstractEntity
+    {
+        public DateTime PurchaseDate { get; set; }
+        public decimal TotalPrice { get; set; }
+        public User User { get; set; }
+        public List<Ticket> Tickets { get; set; }
+    }
+}
