@@ -14,9 +14,25 @@ namespace TicketManager.Controller
         }
 
         [HttpGet]
-        public IActionResult GetMovies()
+        public async Task<IActionResult> GetMovies()
         {
-            return Ok(_movieService.GetMovies());
+            var movies = await _movieService.GetMoviesAsync();
+            return Ok(movies);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMovieById(int id)
+        {
+            var movie = await _movieService.GetMovieByIdAsync(id);
+            return Ok(movie);
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> CreateMovie([FromBody] MovieCreateDto movieDto)
+        //{
+        //    var movie = await _movieService.CreateMovieAsync(movieDto);
+        //    return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
+        //}
+
     }
 }

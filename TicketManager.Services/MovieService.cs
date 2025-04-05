@@ -1,74 +1,91 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TicketManager.DataContext.Context;
+using TicketManager.DataContext.Dtos;
 using TicketManager.DataContext.Entities;
 
 namespace TicketManager.Services
 {
     public interface IMovieService
     {
-        Task<IEnumerable<Movie>> GetMoviesAsync();
-        Task<Movie> GetMovieByIdAsync(int id);
-        Task<Movie> AddMovieAsync(Movie movie);
-        Task<Movie> UpdateMovieAsync(int id, Movie movie);
+        Task<IEnumerable<MovieDto>> GetMoviesAsync();
+        Task<MovieDto> GetMovieByIdAsync(int id);
+        Task<MovieDto> CreateMovieAsync(MovieCreateDto movie);
+        Task<MovieDto> UpdateMovieAsync(int id, MovieUpdateDto movie);
         Task<bool> DeleteMovieAsync(int id);
     }
 
     public class MovieService : IMovieService
     {
         TicketDbContext _context;
+        IMapper _mapper;
 
-        public MovieService(TicketDbContext context)
+        public MovieService(TicketDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Movie>> GetMoviesAsync()
+        public async Task<IEnumerable<MovieDto>> GetMoviesAsync()
         {
-            return _context.Movies.ToList();
+            var movies = await _context.Movies.ToListAsync();
+
+            return _mapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
-        public async Task<Movie> GetMovieByIdAsync(int id)
+        public async Task<MovieDto> GetMovieByIdAsync(int id)
         {
-            return _context.Movies.Find(id);
-        }
-
-        public async Task<Movie> AddMovieAsync(Movie movie)
-        {
-            await _context.Movies.AddAsync(movie);
-            await _context.SaveChangesAsync();
-            return movie;
-        }
-
-        public async Task<Movie> UpdateMovieAsync(int id, Movie movie)
-        {
-            var currentMovie = await _context.Movies.FindAsync(id);
-            if (currentMovie == null)
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
             {
                 throw new KeyNotFoundException(message: "Movie not found.");
             }
 
-            _context.Movies.Update(currentMovie);
+            return _mapper.Map<MovieDto>(movie);
+        }
+
+        public async Task<MovieDto> CreateMovieAsync(MovieCreateDto movieDto)
+        {
+            var movie = _mapper.Map<Movie>(movieDto);
+            _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
-            return currentMovie;
-
-
+            return _mapper.Map<MovieDto>(movie);
 
         }
 
-        public void DeleteMovieAsync(int id)
+        public async Task<MovieDto> UpdateMovieAsync(int id, MovieUpdateDto movieDto)
         {
-            var movie = _context.Movies.Find(id);
-            if (movie != null)
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
             {
-                _context.Movies.Remove(movie);
-                _context.SaveChanges();
+                throw new KeyNotFoundException(message: "Movie not found.");
             }
+
+            _mapper.Map(movieDto, movie);
+            _context.Movies.Update(movie);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<MovieDto>(movie);
+
+        }
+
+        public async Task<bool> DeleteMovieAsync(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
+            {
+                throw new KeyNotFoundException("Movie not found.");
+            }
+
+            _context.Movies.Remove(movie);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

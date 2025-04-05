@@ -16,6 +16,9 @@ builder.Services.AddDbContext<TicketDbContext>(options => options.UseSqlServer(b
 
 builder.Services.AddScoped<IMovieService, MovieService>();
 
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
 // Adding Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
