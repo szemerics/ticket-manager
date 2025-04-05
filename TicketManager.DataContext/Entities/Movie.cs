@@ -6,27 +6,6 @@ using System.Threading.Tasks;
 
 namespace TicketManager.DataContext.Entities
 {
-    public enum MovieCategory
-    {
-        Animation,
-        Action,
-        Adventure,
-        Comedy,
-        Crime,
-        Drama,
-        Fantasy,
-        Historical,
-        Horror,
-        Mystery,
-        Philosophical,
-        Political,
-        Romance,
-        ScienceFiction,
-        Thriller,
-        Western,
-        War,
-        Musical
-    }
     public class Movie : AbstractEntity
     {
         public string Title { get; set; }
