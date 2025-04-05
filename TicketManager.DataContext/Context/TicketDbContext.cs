@@ -22,6 +22,7 @@ namespace TicketManager.DataContext.Context
         public DbSet<Entities.Screening> Screenings { get; set; }
         public DbSet<Entities.Ticket> Tickets { get; set; }
         public DbSet<Entities.User> Users { get; set; }
+        public DbSet<Entities.MovieCategory> MovieCategories { get; set; }
 
 
     }
