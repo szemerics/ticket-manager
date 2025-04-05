@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
 
 namespace TicketManager.Controller
@@ -27,12 +28,30 @@ namespace TicketManager.Controller
             return Ok(movie);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateMovie([FromBody] MovieCreateDto movieDto)
-        //{
-        //    var movie = await _movieService.CreateMovieAsync(movieDto);
-        //    return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> CreateMovie([FromBody] MovieCreateDto movieDto)
+        {
+            var movie = await _movieService.CreateMovieAsync(movieDto);
+            return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieUpdateDto movieDto)
+        {
+            var movie = await _movieService.UpdateMovieAsync(id, movieDto);
+            return Ok(movie);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            var result = await _movieService.DeleteMovieAsync(id);
+            if (result)
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
 
     }
 }
