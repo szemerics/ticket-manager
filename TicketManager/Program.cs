@@ -15,6 +15,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<TicketDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TicketManagerContext")));
 
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
