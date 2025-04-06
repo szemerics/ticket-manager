@@ -26,16 +26,16 @@ namespace TicketManager.DataContext.Context
         public DbSet<Entities.Setting> Settings { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Ticket>()
-                .HasOne(t => t.Screening)
-                .WithMany(s => s.Tickets)
-                .HasForeignKey(t => t.ScreeningId)
-                .OnDelete(DeleteBehavior.Cascade);
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Ticket>()
+        //        .HasOne(t => t.Screening)
+        //        .WithMany(s => s.Tickets)
+        //        .HasForeignKey(t => t.ScreeningId)
+        //        .OnDelete(DeleteBehavior.Cascade);
 
-            base.OnModelCreating(modelBuilder);
-        }
+        //    base.OnModelCreating(modelBuilder);
+        //}
 
 
     }
