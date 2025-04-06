@@ -102,30 +102,25 @@ namespace TicketManager.Services
 
             var ticket = _mapper.Map<Ticket>(ticketDto);
 
-            // Kapcsolódó adatok betöltése a price kiszámításához
             var screening = await _context.Screenings
                 .FirstOrDefaultAsync(s => s.Id == ticketDto.ScreeningId);
 
             if (screening == null)
-            {
-                throw new Exception("Screening not found");
-            }
+                throw new Exception("Screening not found.");
 
             ticket.TicketPrice = screening.ScreeningPrice * (1 - discount / 100);
 
             await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
 
-            // Újratöltjük a ticketet kapcsolatokkal együtt
             var createdTicket = await _context.Tickets
-                .Include(t => t.Screening)
-                    .ThenInclude(s => s.Movie)
-                .Include(t => t.Screening)
-                    .ThenInclude(s => s.Room)
+                .Include(t => t.Screening).ThenInclude(s => s.Movie)
+                .Include(t => t.Screening).ThenInclude(s => s.Room)
                 .Include(t => t.User)
                 .FirstOrDefaultAsync(t => t.Id == ticket.Id);
 
             return _mapper.Map<TicketDto>(createdTicket);
+
         }
 
 
