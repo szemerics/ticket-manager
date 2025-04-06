@@ -18,6 +18,7 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IScreeningService, ScreeningService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
