@@ -1,14 +1,17 @@
 ﻿namespace TicketManager.DataContext.Entities
 {
-    public enum DiscountType
+    public enum TicketType
     {
+        Normal,
         Student,
-        Senior
+        Senior,
+        Disabled,
+        Early
     }
     public class Ticket : AbstractEntity
     {
-        public decimal Price { get; set; }
-        public DiscountType? Discount { get; set; }
+        public decimal TicketPrice { get; set; }
+        public TicketType? Type { get; set; }
         public int ScreeningId { get; set; }
         public Screening Screening { get; set; }
         public User User { get; set; }

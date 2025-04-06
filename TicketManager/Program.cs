@@ -17,6 +17,8 @@ builder.Services.AddDbContext<TicketDbContext>(options => options.UseSqlServer(b
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IScreeningService, ScreeningService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

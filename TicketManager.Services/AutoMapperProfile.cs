@@ -30,6 +30,11 @@ namespace TicketManager.Services
             CreateMap<RoomUpdateDto, Room>()
                 .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
 
+            // Ticket Mappings
+            CreateMap<Ticket, TicketDto>().ReverseMap();
+            CreateMap<TicketCreateDto, Ticket>();
+            CreateMap<TicketUpdateDto, Ticket>();
+
         }
     }
 }
