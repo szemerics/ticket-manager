@@ -23,23 +23,5 @@ namespace TicketManager.DataContext.Context
         public DbSet<Entities.Screening> Screenings { get; set; }
         public DbSet<Entities.Ticket> Tickets { get; set; }
         public DbSet<Entities.User> Users { get; set; }
-        public DbSet<Entities.MovieCategory> MovieCategories { get; set; }
-
-
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Room>()
-        //        .Property(r => r.Seats)
-        //        .HasConversion(
-        //            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-        //            v => JsonSerializer.Deserialize<List<int>>(v, (JsonSerializerOptions)null))
-        //        .HasColumnType("nvarchar(max)");
-
-        //    base.OnModelCreating(modelBuilder);
-        //}
-
-
-
     }
 }

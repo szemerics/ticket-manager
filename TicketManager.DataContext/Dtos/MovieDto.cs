@@ -13,9 +13,11 @@ namespace TicketManager.DataContext.Dtos
         public string Title { get; set; }
         public int Year { get; set; }
         public string Description { get; set; }
-        public List<MovieCategory> Categories { get; set; }
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+
+        // enum ints for categories
+        public List<MovieCategory> Categories { get; set; }
         public List<ScreeningDto> Screenings { get; set; }
     }
 
@@ -25,9 +27,13 @@ namespace TicketManager.DataContext.Dtos
         public string Title { get; set; }
         public int Year { get; set; }
         public string Description { get; set; }
-        public List<int> CategoryIds { get; set; }
+        
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+
+        // enum ints for categories
+        public List<MovieCategory> Categories { get; set; }
+        
     }
 
     public class MovieUpdateDto
@@ -35,8 +41,10 @@ namespace TicketManager.DataContext.Dtos
         public string Title { get; set; }
         public int Year { get; set; }
         public string Description { get; set; }
-        public List<int> CategoryIds { get; set; }
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+
+        // enum ints for categories
+        public List<MovieCategory> Categories { get; set; }
     }
 }
