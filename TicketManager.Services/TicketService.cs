@@ -85,17 +85,15 @@ namespace TicketManager.Services
 
             var ticket = _mapper.Map<Ticket>(ticketDto);
 
-            ticket.TicketPrice = ticket.Screening.ScreeningPrice * (1 - discount / 100);
-
-
             await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
 
             var createdTicket = await _context.Tickets
                 .Include(t => t.Screening)
                 .FirstOrDefaultAsync(t => t.Id == ticket.Id);
-            
 
+
+            ticket.TicketPrice = createdTicket.Screening.ScreeningPrice * (1 - discount / 100);  
             return _mapper.Map<TicketDto>(createdTicket);
         }
 

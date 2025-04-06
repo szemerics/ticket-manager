@@ -1,4 +1,12 @@
-﻿namespace TicketManager.DataContext.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TicketManager.DataContext.Entities;
+
+
+namespace TicketManager.DataContext.Dtos
 {
     public class UserDto
     {
