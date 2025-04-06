@@ -17,6 +17,19 @@ namespace TicketManager.Services
             CreateMap<Movie, MovieDto>().ReverseMap();
             CreateMap<MovieCreateDto, Movie>();
             CreateMap<MovieUpdateDto, Movie>();
+
+            // Screening Mappings
+            CreateMap<Screening, ScreeningDto>().ReverseMap();
+            CreateMap<ScreeningCreateDto, Screening>();
+            CreateMap<ScreeningUpdateDto, Screening>();
+
+            // Room Mappings
+            CreateMap<Room, RoomDto>().ReverseMap();
+            CreateMap<RoomCreateDto, Room>()
+                .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
+            CreateMap<RoomUpdateDto, Room>()
+                .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
+
         }
     }
 }

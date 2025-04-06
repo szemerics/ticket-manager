@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.DataContext.Context;
 using TicketManager.DataContext.Dtos;
@@ -20,82 +21,54 @@ namespace TicketManager.Services
     public class RoomService : IRoomService
     {
         private readonly TicketDbContext _context;
+        private readonly IMapper _mapper;
 
-        public RoomService(TicketDbContext context)
+        public RoomService(TicketDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<RoomDto>> GetRoomsAsync()
         {
-            return await _context.Rooms
-                .Select(r => new RoomDto
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    Capacity = r.Capacity
-                })
-                .ToListAsync();
+            var rooms = await _context.Rooms.ToListAsync();
+            return _mapper.Map<IEnumerable<RoomDto>>(rooms);
         }
 
         public async Task<RoomDto> GetRoomByIdAsync(int id)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
-                return null;
+                throw new KeyNotFoundException(message: "Room not found.");
 
-            return new RoomDto
-            {
-                Id = room.Id,
-                Name = room.Name,
-                Capacity = room.Capacity
-            };
+            return _mapper.Map<RoomDto>(room);
         }
 
-        public async Task<RoomDto> CreateRoomAsync(RoomCreateDto dto)
+        public async Task<RoomDto> CreateRoomAsync(RoomCreateDto roomDto)
         {
-            var room = new Room
-            {
-                Name = dto.Name,
-                Capacity = dto.Capacity
-            };
-
-            _context.Rooms.Add(room);
+            var room = _mapper.Map<Room>(roomDto);
+            await _context.Rooms.AddAsync(room);
             await _context.SaveChangesAsync();
-
-            return new RoomDto
-            {
-                Id = room.Id,
-                Name = room.Name,
-                Capacity = room.Capacity
-            };
+            return _mapper.Map<RoomDto>(room);
         }
 
-        public async Task<RoomDto> UpdateRoomAsync(int id, RoomUpdateDto dto)
+        public async Task<RoomDto> UpdateRoomAsync(int id, RoomUpdateDto roomDto)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
-                return null;
-
-            room.Name = dto.Name;
-            room.Capacity = dto.Capacity;
-
-            _context.Rooms.Update(room);
+                throw new KeyNotFoundException(message: "Room not found.");
+            _mapper.Map(roomDto, room);
             await _context.SaveChangesAsync();
-
-            return new RoomDto
-            {
-                Id = room.Id,
-                Name = room.Name,
-                Capacity = room.Capacity
-            };
+            return _mapper.Map<RoomDto>(room);
         }
 
         public async Task<bool> DeleteRoomAsync(int id)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
-                return false;
+            {
+                throw new KeyNotFoundException(message: "Room not found.");
+            }
 
 
             _context.Rooms.Remove(room);
