@@ -35,6 +35,7 @@ namespace TicketManager.Services
         public async Task<IEnumerable<TicketDto>> GetTicketsAsync()
         {
             var tickets = await _context.Tickets.ToListAsync();
+
             return _mapper.Map<IEnumerable<TicketDto>>(tickets);
         }
 
@@ -88,13 +89,13 @@ namespace TicketManager.Services
             await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
 
-            var createdTicket = await _context.Tickets
-                .Include(t => t.Screening)
-                .FirstOrDefaultAsync(t => t.Id == ticket.Id);
+            //var createdTicket = await _context.Tickets
+            //    .Include(t => t.Screening)
+            //    .FirstOrDefaultAsync(t => t.Id == ticket.Id);
 
 
-            ticket.TicketPrice = createdTicket.Screening.ScreeningPrice * (1 - discount / 100);  
-            return _mapper.Map<TicketDto>(createdTicket);
+            //ticket.TicketPrice = createdTicket.Screening.ScreeningPrice * (1 - discount / 100);  
+            return _mapper.Map<TicketDto>(ticket);
         }
 
         public async Task<TicketDto> UpdateTicketAsync(int id, TicketUpdateDto ticketDto)

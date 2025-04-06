@@ -1,4 +1,6 @@
-﻿namespace TicketManager.DataContext.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace TicketManager.DataContext.Entities
 {
     public enum TicketType
     {
