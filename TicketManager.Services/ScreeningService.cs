@@ -48,9 +48,21 @@ namespace TicketManager.Services
 
             await _context.Screenings.AddAsync(screening);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ScreeningDto>(screening);
-                        
+
+            var createdScreening = await _context.Screenings
+                .Include(s => s.Movie)
+                .Include(s => s.Room)
+                .Include(s => s.Tickets)
+                .FirstOrDefaultAsync(s => s.Id == screening.Id);
+
+            if (createdScreening == null)
+            {
+                throw new Exception("Error during creation of screening.");
+            }
+
+            return _mapper.Map<ScreeningDto>(createdScreening);
         }
+
 
         public async Task<bool> DeleteScreeningAsync(int id)
         {
@@ -66,12 +78,19 @@ namespace TicketManager.Services
 
         public async Task<ScreeningDto> GetScreeningByIdAsync(int id)
         {
-            var screening = _context.Screenings.FindAsync(id);
+            var screening = await _context.Screenings.FindAsync(id);
             if (screening == null)
             {
                 throw new KeyNotFoundException(message: "Screening not found.");
             }
-            return _mapper.Map<ScreeningDto>(screening);
+
+            var createdScreening = await _context.Screenings
+                    .Include(s => s.Movie)
+                    .Include(s => s.Room)
+                    .Include(s => s.Tickets)
+                    .FirstOrDefaultAsync();
+
+            return _mapper.Map<ScreeningDto>(createdScreening);
         }
 
         public async Task<IEnumerable<ScreeningDto>> GetScreeningsAsync()
