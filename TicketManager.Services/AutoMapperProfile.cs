@@ -20,7 +20,8 @@ namespace TicketManager.Services
 
             // Screening Mappings
             CreateMap<Screening, ScreeningDto>().ReverseMap();
-            CreateMap<ScreeningCreateDto, Screening>();
+            CreateMap<ScreeningCreateDto, Screening>()
+                .ForMember(dest => dest.ScreeningPrice, opt => opt.MapFrom(src => src.ScreeningPrice));
             CreateMap<ScreeningUpdateDto, Screening>();
 
             // Room Mappings
@@ -35,6 +36,10 @@ namespace TicketManager.Services
             CreateMap<TicketCreateDto, Ticket>();
             CreateMap<TicketUpdateDto, Ticket>();
 
+
+            // Settings Mappings
+            CreateMap<Setting, SettingDto>().ReverseMap();
+            CreateMap<UpdateSettingDto, Setting>();
         }
     }
 }

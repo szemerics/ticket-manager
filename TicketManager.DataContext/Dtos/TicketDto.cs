@@ -18,7 +18,6 @@ namespace TicketManager.DataContext.Dtos
 
     public class TicketCreateDto
     {
-        public decimal Price { get; set; }
         public TicketType? Type { get; set; }
         public int ScreeningId { get; set; }
         public int UserId { get; set; }

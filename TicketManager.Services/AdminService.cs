@@ -1,61 +1,49 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TicketManager.DataContext.Context;
+using TicketManager.DataContext.Dtos;
 using TicketManager.DataContext.Entities;
 
 namespace TicketManager.Services
 {
     public interface IAdminService
     {
-        Task<decimal> GetBaseScreeningPriceAsync();
-        Task SetBaseScreeningPriceAsync(decimal newPrice);
+        Task<List<SettingDto>> GetSettingsAsync();
+        Task<SettingDto> UpdateSettingAsync(UpdateSettingDto settingDtos);
     }
     public class AdminService : IAdminService
     {
         private TicketDbContext _context;
-        public AdminService (TicketDbContext context)
+        private IMapper _mapper;
+        public AdminService (TicketDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<decimal> GetBaseScreeningPriceAsync()
+        public async Task<List<SettingDto>> GetSettingsAsync()
         {
-            var setting = await _context.Settings.FirstOrDefaultAsync(s => s.Key == "BaseScreeningPrice");
+            var settings = await _context.Settings.ToListAsync();
 
-            if (setting == null)
-            {
-                throw new KeyNotFoundException(message: "Base screening price not found.");
-            }
-
-            return decimal.Parse(setting.Value);
+            return _mapper.Map<List<SettingDto>>(settings);
         }
 
-        public async Task SetBaseScreeningPriceAsync(decimal newPrice)
+        public async Task<SettingDto> UpdateSettingAsync(UpdateSettingDto settingDto)
         {
-            var setting = await _context.Settings.FirstOrDefaultAsync(s => s.Key == "BaseScreeningPrice");
+            var setting = await _context.Settings.FindAsync(settingDto.Id);
 
-            if (setting == null)
+            if (setting != null)
             {
-                setting = new Setting
-                {
-                    Key = "BaseScreeningPrice",
-                    Value = newPrice.ToString()
-                };
-
-                await _context.Settings.AddAsync(setting);
+                setting.Value = settingDto.Value;
             }
-
-            else
-            {
-                setting.Value = newPrice.ToString();
-                _context.Settings.Update(setting);
-            }
-
             await _context.SaveChangesAsync();
+
+            return _mapper.Map<SettingDto>(setting);
         }
     }
 }

@@ -32,6 +32,20 @@ namespace TicketManager.Services
         public async Task<ScreeningDto> CreateScreeningAsync(ScreeningCreateDto screeningDto)
         {
             var screening = _mapper.Map<Screening>(screeningDto);
+
+            if (screening.ScreeningPrice == 0)
+            {
+                var setting = await _context.Settings.FirstOrDefaultAsync(s => s.Key == "BaseScreeningPrice");
+
+                if (setting == null)
+                {
+                    throw new KeyNotFoundException(message: "Base screening price not found.");
+                }
+
+                screening.ScreeningPrice = decimal.Parse(setting.Value);
+            }
+
+
             await _context.Screenings.AddAsync(screening);
             await _context.SaveChangesAsync();
             return _mapper.Map<ScreeningDto>(screening);

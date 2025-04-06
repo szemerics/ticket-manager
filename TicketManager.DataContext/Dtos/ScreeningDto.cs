@@ -14,11 +14,13 @@ namespace TicketManager.DataContext.Dtos
         public DateTime ScreeningTime { get; set; }
         public List<Ticket> Tickets { get; set; }
         public string RoomName { get; set; }
+        public decimal ScreeningPrice { get; set; }
     }
 
     public class ScreeningCreateDto
     {
         public int MovieId { get; set; }
+        public decimal? ScreeningPrice { get; set; }
         public DateTime ScreeningTime { get; set; }
         public int RoomId { get; set; }
     }

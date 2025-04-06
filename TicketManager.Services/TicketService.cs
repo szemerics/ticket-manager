@@ -48,13 +48,55 @@ namespace TicketManager.Services
             return _mapper.Map<TicketDto>(ticket);
         }
 
+        private decimal GetDiscountValue(List<Setting> settings, string key)
+        {
+            var setting = settings.FirstOrDefault(s => s.Key == key);
+            if (setting != null && decimal.TryParse(setting.Value, out decimal discount))
+            {
+                return discount;
+            }
+
+            return 0;
+        }
+
         public async Task<TicketDto> CreateTicketAsync(TicketCreateDto ticketDto)
         {
+            var settings = await _context.Settings.ToListAsync();
+            decimal discount = 0;
+
+            switch (ticketDto.Type)
+            {
+                case TicketType.Student:
+                    discount = GetDiscountValue(settings, "StudentTicketDiscount");
+                    break;
+                case TicketType.Senior:
+                    discount = GetDiscountValue(settings, "SeniorTicketDiscount");
+                    break;
+                case TicketType.Disabled:
+                    discount = GetDiscountValue(settings, "DisabledTicketDiscount");
+                    break;
+                case TicketType.Early:
+                    discount = GetDiscountValue(settings, "EarlyTicketDiscount");
+                    break;
+                case TicketType.Normal:
+                    discount = GetDiscountValue(settings, "NormalTicketDiscount");
+                    break;
+            }
+
             var ticket = _mapper.Map<Ticket>(ticketDto);
-            _context.Tickets.Add(ticket);
+
+            ticket.TicketPrice = ticket.Screening.ScreeningPrice * (1 - discount / 100);
+
+
+            await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<TicketDto>(ticket);
+            var createdTicket = await _context.Tickets
+                .Include(t => t.Screening)
+                .FirstOrDefaultAsync(t => t.Id == ticket.Id);
+            
+
+            return _mapper.Map<TicketDto>(createdTicket);
         }
 
         public async Task<TicketDto> UpdateTicketAsync(int id, TicketUpdateDto ticketDto)

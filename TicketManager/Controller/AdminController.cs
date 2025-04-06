@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
 
 namespace TicketManager.Controller
@@ -15,18 +16,21 @@ namespace TicketManager.Controller
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBaseScreeningPrice()
+        public async Task<ActionResult<List<SettingDto>>> GetSettings()
         {
-            var price = await _adminService.GetBaseScreeningPriceAsync();
+            var settings = await _adminService.GetSettingsAsync();
 
-            return Ok(price);
+            return Ok(settings);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SetBaseScreeningPrice(decimal newPrice)
+        [HttpPut]
+        public async Task<IActionResult> UpdateSettings(UpdateSettingDto setting)
         {
-            await _adminService.SetBaseScreeningPriceAsync(newPrice);
-            return Ok(new { message = "Base screening price updated successfully." });
+            if (setting == null)
+                return BadRequest("Setting cannot be empty.");
+
+            await _adminService.UpdateSettingAsync(setting);
+            return Ok(setting);
         }
 
     }
