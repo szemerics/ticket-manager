@@ -47,7 +47,9 @@ namespace TicketManager.Services
                 .ForMember(dest => dest.PurchaseDate, opt => opt.MapFrom(src => DateTime.Now));
 
             // Ticket Mappings
-            CreateMap<Ticket, TicketDto>().ReverseMap();
+            CreateMap<Ticket, TicketDto>()
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TicketPrice))
+                .ReverseMap();
             CreateMap<TicketCreateDto, Ticket>();
             CreateMap<TicketUpdateDto, Ticket>();
 

@@ -24,5 +24,6 @@ namespace TicketManager.DataContext.Context
         public DbSet<Entities.Ticket> Tickets { get; set; }
         public DbSet<Entities.User> Users { get; set; }
         public DbSet<Entities.Setting> Settings { get; set; }
+
     }
 }
