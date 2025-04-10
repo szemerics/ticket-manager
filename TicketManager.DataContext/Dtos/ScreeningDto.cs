@@ -8,10 +8,10 @@ using TicketManager.DataContext.Entities;
 namespace TicketManager.DataContext.Dtos
 {
     public class TicketShortDto {
-    public int Id { get; set; }
-    public TicketType? Type { get; set; }
-    public decimal Price { get; set; }
-}
+        public int Id { get; set; }
+        public TicketType? Type { get; set; }
+        public decimal Price { get; set; }
+    }
 
     public class ScreeningDto
     {

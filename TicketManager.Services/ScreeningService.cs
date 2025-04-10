@@ -104,7 +104,12 @@ namespace TicketManager.Services
 
         public async Task<ScreeningDto> UpdateScreeningAsync(int id, ScreeningUpdateDto screeningDto)
         {
-            var screening = await _context.Screenings.FindAsync(id);
+            var screening = await _context.Screenings
+                .Include(s => s.Movie)
+                .Include(s => s.Room)
+                .Include(s => s.Tickets)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
             if (screening == null)
             {
                 throw new KeyNotFoundException(message: "Screening not found.");
