@@ -35,6 +35,7 @@ namespace TicketManager.DataContext.Dtos
         [Required]
         [Phone]
         public string Phone { get; set; }
+        public IList<int> RolesIds { get; set; }
     }
 
     public class UserLoginDto

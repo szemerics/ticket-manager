@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
@@ -7,6 +8,7 @@ namespace TicketManager.Controller
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -33,10 +35,19 @@ namespace TicketManager.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserRegisterDto dto)
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] UserRegisterDto userDto)
         {
-            var createdUser = await _userService.RegisterAsync(dto);
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+            var result = await _userService.RegisterAsync(userDto);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] UserLoginDto userDto)
+        {
+            var result = await _userService.LoginAsync(userDto);
+            return Ok(new { Token = result });
         }
 
         [HttpPut("{id}")]
