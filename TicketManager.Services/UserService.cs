@@ -12,7 +12,7 @@ namespace TicketManager.Services
     {
         Task<IEnumerable<UserDto>> GetUsersAsync();
         Task<UserDto> GetUserByIdAsync(int id);
-        Task<UserDto> CreateUserAsync(UserCreateDto dto);
+        Task<UserDto> RegisterAsync(UserRegisterDto dto);
         Task<UserDto> UpdateUserAsync(int id, UserUpdateDto dto);
         Task<bool> DeleteUserAsync(int id);
     }
@@ -40,9 +40,9 @@ namespace TicketManager.Services
             return user == null ? null : _mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserDto> CreateUserAsync(UserCreateDto dto)
+        public async Task<UserDto> RegisterAsync(UserRegisterDto userDto)
         {
-            var user = _mapper.Map<User>(dto);
+            var user = _mapper.Map<User>(userDto);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);

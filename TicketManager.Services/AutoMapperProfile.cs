@@ -37,7 +37,7 @@ namespace TicketManager.Services
 
             // User Mapping
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<UserCreateDto, User>();
+            CreateMap<UserRegisterDto, User>();
             CreateMap<UserUpdateDto, User>();
 
 
@@ -57,6 +57,9 @@ namespace TicketManager.Services
             // Settings Mappings
             CreateMap<Setting, SettingDto>().ReverseMap();
             CreateMap<UpdateSettingDto, Setting>();
+
+            // Role Mappings
+            CreateMap<Role, RoleDto>().ReverseMap();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,13 +15,37 @@ namespace TicketManager.DataContext.Dtos
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public IList<RoleDto> Roles { get; set; }
     }
 
-    public class UserCreateDto
+    public class UserRegisterDto
     {
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
+
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
+
+        [Required]
+        [Phone]
         public string Phone { get; set; }
+    }
+
+    public class UserLoginDto
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
     }
 
     public class UserUpdateDto

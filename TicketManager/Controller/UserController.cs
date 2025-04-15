@@ -33,9 +33,9 @@ namespace TicketManager.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
+        public async Task<IActionResult> CreateUser([FromBody] UserRegisterDto dto)
         {
-            var createdUser = await _userService.CreateUserAsync(dto);
+            var createdUser = await _userService.RegisterAsync(dto);
             return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
         }
 
