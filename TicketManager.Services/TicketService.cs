@@ -146,9 +146,18 @@ namespace TicketManager.Services
             {
                 throw new KeyNotFoundException(message: "Ticket not found.");
             }
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
-            return true;
+
+            if (ticket.Screening.ScreeningTime < DateTime.Now || ticket.Screening.ScreeningTime.AddHours(-4) > DateTime.Now)
+            {
+                _context.Tickets.Remove(ticket);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                throw new TimeoutException("The screening will be starting within 4 hours!");
+            }
+            
         }
 
     }

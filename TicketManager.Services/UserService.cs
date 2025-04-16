@@ -46,7 +46,9 @@ namespace TicketManager.Services
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users
+                .Include(u => u.Roles)
+                .ToListAsync();
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
@@ -126,6 +128,7 @@ namespace TicketManager.Services
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.AuthTime, DateTime.Now.ToString()) // CultureInfo.InvariantCulture (?)

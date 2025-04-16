@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
 
@@ -6,6 +7,7 @@ namespace TicketManager.Controller
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize (Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;

@@ -71,9 +71,11 @@ namespace TicketManager.Services
             {
                 throw new KeyNotFoundException(message: "Screening not found.");
             }
+
             _context.Screenings.Remove(screening);
             await _context.SaveChangesAsync();
             return true;
+
         }
 
         public async Task<ScreeningDto> GetScreeningByIdAsync(int id)
@@ -98,6 +100,7 @@ namespace TicketManager.Services
             var screenings = await _context.Screenings
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
+                .Include(s => s.Tickets)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<ScreeningDto>>(screenings);
         }

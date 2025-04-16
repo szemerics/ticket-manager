@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
 
@@ -6,6 +7,7 @@ namespace TicketManager.Controller
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -31,6 +33,7 @@ namespace TicketManager.Controller
 
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto dto)
         {
             var createdOrder = await _orderService.CreateOrderAsync(dto);
@@ -40,6 +43,7 @@ namespace TicketManager.Controller
 
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var deleted = await _orderService.DeleteOrderAsync(id);

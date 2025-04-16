@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
@@ -53,6 +54,7 @@ namespace TicketManager.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
+            var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
             var updatedUser = await _userService.UpdateUserAsync(id, dto);
             if (updatedUser == null)
                 return NotFound();

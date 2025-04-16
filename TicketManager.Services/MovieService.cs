@@ -33,7 +33,9 @@ namespace TicketManager.Services
 
         public async Task<IEnumerable<MovieDto>> GetMoviesAsync()
         {
-            var movies = await _context.Movies.ToListAsync();
+            var movies = await _context.Movies
+                .Include(m => m.Screenings)
+                .ToListAsync();
 
             return _mapper.Map<IEnumerable<MovieDto>>(movies);
         }
@@ -81,6 +83,15 @@ namespace TicketManager.Services
             if (movie == null)
             {
                 throw new KeyNotFoundException("Movie not found.");
+            }
+
+            // Check if the movie has any screenings
+            var screenings = await _context.Screenings
+                .Where(s => s.MovieId == id)
+                .ToListAsync();
+            if (screenings.Any())
+            {
+                throw new InvalidOperationException("Cannot delete a movie that has screenings.");
             }
 
             _context.Movies.Remove(movie);
