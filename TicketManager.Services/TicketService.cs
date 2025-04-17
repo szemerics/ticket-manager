@@ -35,7 +35,7 @@ namespace TicketManager.Services
         public async Task<IEnumerable<TicketDto>> GetTicketsAsync()
         {
             var tickets = await _context.Tickets
-                .Include(t => t.User)
+                .Include(t => t.Order)
                 .Include(t => t.Screening)
                     .ThenInclude(s => s.Movie)
                 .Include(t => t.Screening)
@@ -49,7 +49,7 @@ namespace TicketManager.Services
         public async Task<TicketDto> GetTicketByIdAsync(int id)
         {
             var ticket = await _context.Tickets
-                .Include(t => t.User)
+                .Include(t => t.Order)
                 .Include(t => t.Screening)
                     .ThenInclude(s => s.Movie)
                 .Include(t => t.Screening)
@@ -116,7 +116,7 @@ namespace TicketManager.Services
             var createdTicket = await _context.Tickets
                 .Include(t => t.Screening).ThenInclude(s => s.Movie)
                 .Include(t => t.Screening).ThenInclude(s => s.Room)
-                .Include(t => t.User)
+                .Include(t => t.Order)
                 .FirstOrDefaultAsync(t => t.Id == ticket.Id);
 
             return _mapper.Map<TicketDto>(createdTicket);
