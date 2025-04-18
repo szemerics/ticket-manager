@@ -58,25 +58,25 @@ namespace TicketManager.Controller
         public async Task<IActionResult> CreateOrderByAnonymous([FromBody] OrderCreateDto dto, string email, string phone)
         {
             var createdOrder = await _orderService.CreateOrderByAnonymousAsync(dto, email, phone);
-            return CreatedAtAction(nameof(_orderService.GetOrderByIdAsync), new { id = createdOrder.Id }, createdOrder);
+            return CreatedAtAction(nameof(GetOrdersByUserId), new { id = createdOrder.Id }, createdOrder);
         }
 
 
         [HttpPost]
-        [Authorize(Roles = "Cashier")]
+        [Authorize(Roles = "Admin, Cashier")]
         public async Task<IActionResult> CreateOrderByCashier([FromBody] OrderCreateDto dto)
         {
             var createdOrder = await _orderService.CreateOrderByCashierAsync(dto);
-            return CreatedAtAction(nameof(_orderService.GetOrderByIdAsync), new { id = createdOrder.Id }, createdOrder);
+            return CreatedAtAction(nameof(GetOrdersByUserId), new { id = createdOrder.Id }, createdOrder);
         }
 
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{orderId}")]
         [Authorize(Roles = "Admin,Cashier,Customer")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeleteOrder(int orderId)
         {
-            var deleted = await _orderService.DeleteOrderAsync(id);
+            var deleted = await _orderService.DeleteOrderAsync(orderId);
             if (!deleted)
                 return NotFound();
             return NoContent();

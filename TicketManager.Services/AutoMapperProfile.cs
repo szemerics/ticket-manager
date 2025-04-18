@@ -43,7 +43,10 @@ namespace TicketManager.Services
 
 
             // Order Mapping
-            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<Order, OrderDto>()
+                .ForMember(dest => dest.TicketsQuantity, opt => opt.MapFrom(src => src.Tickets.Count))
+                .ReverseMap();
+
             CreateMap<OrderCreateDto, Order>()
                 .ForMember(dest => dest.PurchaseDate, opt => opt.MapFrom(src => DateTime.Now));
 
@@ -67,22 +70,6 @@ namespace TicketManager.Services
 
         }
 
-        //private List<Seat> GenerateSeats(int rowNumber, int columnNumber)
-        //{
-        //    var seats = new List<Seat>();
-        //    for (int row = 1; row <= rowNumber; row++)
-        //    {
-        //        for (int column = 1; column <= columnNumber; column++)
-        //        {
-        //            seats.Add(new Seat
-        //            {
-        //                Row = row,
-        //                Column = column
-        //            });
-        //        }
-        //    }
-        //    return seats;
-        //}
 
     }
 }
