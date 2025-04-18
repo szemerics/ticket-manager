@@ -25,5 +25,12 @@ namespace TicketManager.DataContext.Context
         public DbSet<Entities.User> Users { get; set; }
         public DbSet<Entities.Setting> Settings { get; set; }
 
+
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+
+        }
     }
 }

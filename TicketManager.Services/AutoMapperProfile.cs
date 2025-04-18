@@ -30,10 +30,10 @@ namespace TicketManager.Services
 
             // Room Mappings
             CreateMap<Room, RoomDto>().ReverseMap();
-            CreateMap<RoomCreateDto, Room>()
-                .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
-            CreateMap<RoomUpdateDto, Room>()
-                .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
+            //CreateMap<RoomCreateDto, Room>()
+            //    .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
+            //CreateMap<RoomUpdateDto, Room>()
+            //    .ForMember(dest => dest.Seats, opt => opt.MapFrom(src => Enumerable.Range(1, src.Capacity).ToList()));
 
             // User Mapping
             CreateMap<User, UserDto>().ReverseMap();
@@ -49,7 +49,7 @@ namespace TicketManager.Services
 
             // Ticket Mappings
             CreateMap<Ticket, TicketDto>()
-                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TicketPrice))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ReverseMap();
             CreateMap<TicketCreateDto, Ticket>();
             CreateMap<TicketUpdateDto, Ticket>();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketManager.DataContext.Context;
 
@@ -11,9 +12,11 @@ using TicketManager.DataContext.Context;
 namespace TicketManager.DataContext.Migrations
 {
     [DbContext(typeof(TicketDbContext))]
-    partial class TicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250418171911_ReviewTicketsAndSeats")]
+    partial class ReviewTicketsAndSeats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RoleUser", (string)null);
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Movie", b =>
@@ -71,7 +74,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Order", b =>
@@ -109,7 +112,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Role", b =>
@@ -129,7 +132,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Room", b =>
@@ -155,7 +158,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Screening", b =>
@@ -187,7 +190,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Screenings", (string)null);
+                    b.ToTable("Screenings");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Seat", b =>
@@ -217,7 +220,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("ScreeningId");
 
-                    b.ToTable("Seat", (string)null);
+                    b.ToTable("Seat");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Setting", b =>
@@ -239,7 +242,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Settings", (string)null);
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Ticket", b =>
@@ -276,7 +279,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("SeatId");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.User", b =>
@@ -307,7 +310,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -387,7 +390,7 @@ namespace TicketManager.DataContext.Migrations
                     b.HasOne("TicketManager.DataContext.Entities.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");

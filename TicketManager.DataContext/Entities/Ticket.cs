@@ -12,11 +12,14 @@ namespace TicketManager.DataContext.Entities
     }
     public class Ticket : AbstractEntity
     {
-        public decimal TicketPrice { get; set; }
+        public decimal Price { get; set; }
         public TicketType? Type { get; set; }
-        public int ScreeningId { get; set; }
-        public Screening Screening { get; set; }
         public int OrderId { get; set; }
+        public int SeatId { get; set; }
+
+
+
         public Order Order { get; set; }
+        public Seat Seat { get; set; }
     }
 }

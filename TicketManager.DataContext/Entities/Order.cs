@@ -10,10 +10,15 @@ namespace TicketManager.DataContext.Entities
     {
         public DateTime PurchaseDate { get; set; }
         public decimal TotalPrice { get; set; }
+        public int ScreeningId { get; set; }
         public int? UserId { get; set; }
-        public User? User { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
+        
+
+
+        public User? User { get; set; }
+        public Screening Screening { get; set; }
         public List<Ticket> Tickets { get; set; }
     }
 }

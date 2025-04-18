@@ -13,11 +13,11 @@ namespace TicketManager.Services
 {
     public interface ITicketService
     {
-        Task<IEnumerable<TicketDto>> GetTicketsAsync();
-        Task<TicketDto> GetTicketByIdAsync(int id);
-        Task<TicketDto> CreateTicketAsync(TicketCreateDto ticket);
+        //Task<IEnumerable<TicketDto>> GetTicketsAsync();
+        //Task<TicketDto> GetTicketByIdAsync(int id);
+        //Task<TicketDto> CreateTicketAsync(TicketCreateDto ticket);
         Task<TicketDto> UpdateTicketAsync(int id, TicketUpdateDto ticket);
-        Task<bool> DeleteTicketAsync(int id);
+        //Task<bool> DeleteTicketAsync(int id);
     }
 
     public class TicketService : ITicketService
@@ -32,37 +32,37 @@ namespace TicketManager.Services
         }
 
 
-        public async Task<IEnumerable<TicketDto>> GetTicketsAsync()
-        {
-            var tickets = await _context.Tickets
-                .Include(t => t.Order)
-                .Include(t => t.Screening)
-                    .ThenInclude(s => s.Movie)
-                .Include(t => t.Screening)
-                    .ThenInclude(s => s.Room)
-                .ToListAsync();
+        //public async Task<IEnumerable<TicketDto>> GetTicketsAsync()
+        //{
+        //    var tickets = await _context.Tickets
+        //        .Include(t => t.Order)
+        //        .Include(t => t.Screening)
+        //            .ThenInclude(s => s.Movie)
+        //        .Include(t => t.Screening)
+        //            .ThenInclude(s => s.Room)
+        //        .ToListAsync();
 
-            return _mapper.Map<IEnumerable<TicketDto>>(tickets);
-        }
+        //    return _mapper.Map<IEnumerable<TicketDto>>(tickets);
+        //}
 
 
-        public async Task<TicketDto> GetTicketByIdAsync(int id)
-        {
-            var ticket = await _context.Tickets
-                .Include(t => t.Order)
-                .Include(t => t.Screening)
-                    .ThenInclude(s => s.Movie)
-                .Include(t => t.Screening)
-                    .ThenInclude(s => s.Room)
-                .FirstOrDefaultAsync(t => t.Id == id);
+        //public async Task<TicketDto> GetTicketByIdAsync(int id)
+        //{
+        //    var ticket = await _context.Tickets
+        //        .Include(t => t.Order)
+        //        .Include(t => t.Screening)
+        //            .ThenInclude(s => s.Movie)
+        //        .Include(t => t.Screening)
+        //            .ThenInclude(s => s.Room)
+        //        .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (ticket == null)
-            {
-                throw new KeyNotFoundException("Ticket not found.");
-            }
+        //    if (ticket == null)
+        //    {
+        //        throw new KeyNotFoundException("Ticket not found.");
+        //    }
 
-            return _mapper.Map<TicketDto>(ticket);
-        }
+        //    return _mapper.Map<TicketDto>(ticket);
+        //}
 
 
         private decimal GetDiscountValue(List<Setting> settings, string key)
@@ -76,52 +76,52 @@ namespace TicketManager.Services
             return 0;
         }
 
-        public async Task<TicketDto> CreateTicketAsync(TicketCreateDto ticketDto)
-        {
-            var settings = await _context.Settings.ToListAsync();
-            decimal discount = 0;
+        //public async Task<TicketDto> CreateTicketAsync(TicketCreateDto ticketDto)
+        //{
+        //    var settings = await _context.Settings.ToListAsync();
+        //    decimal discount = 0;
 
-            switch (ticketDto.Type)
-            {
-                case TicketType.Student:
-                    discount = GetDiscountValue(settings, "StudentTicketDiscount");
-                    break;
-                case TicketType.Senior:
-                    discount = GetDiscountValue(settings, "SeniorTicketDiscount");
-                    break;
-                case TicketType.Disabled:
-                    discount = GetDiscountValue(settings, "DisabledTicketDiscount");
-                    break;
-                case TicketType.Early:
-                    discount = GetDiscountValue(settings, "EarlyTicketDiscount");
-                    break;
-                case TicketType.Normal:
-                    discount = GetDiscountValue(settings, "NormalTicketDiscount");
-                    break;
-            }
+        //    switch (ticketDto.Type)
+        //    {
+        //        case TicketType.Student:
+        //            discount = GetDiscountValue(settings, "StudentTicketDiscount");
+        //            break;
+        //        case TicketType.Senior:
+        //            discount = GetDiscountValue(settings, "SeniorTicketDiscount");
+        //            break;
+        //        case TicketType.Disabled:
+        //            discount = GetDiscountValue(settings, "DisabledTicketDiscount");
+        //            break;
+        //        case TicketType.Early:
+        //            discount = GetDiscountValue(settings, "EarlyTicketDiscount");
+        //            break;
+        //        case TicketType.Normal:
+        //            discount = GetDiscountValue(settings, "NormalTicketDiscount");
+        //            break;
+        //    }
 
-            var ticket = _mapper.Map<Ticket>(ticketDto);
+        //    var ticket = _mapper.Map<Ticket>(ticketDto);
 
-            var screening = await _context.Screenings
-                .FirstOrDefaultAsync(s => s.Id == ticketDto.ScreeningId);
+        //    var screening = await _context.Screenings
+        //        .FirstOrDefaultAsync(s => s.Id == ticketDto.ScreeningId);
 
-            if (screening == null)
-                throw new Exception("Screening not found.");
+        //    if (screening == null)
+        //        throw new Exception("Screening not found.");
 
-            ticket.TicketPrice = screening.ScreeningPrice * (1 - discount / 100);
+        //    ticket.TicketPrice = screening.ScreeningPrice * (1 - discount / 100);
 
-            await _context.Tickets.AddAsync(ticket);
-            await _context.SaveChangesAsync();
+        //    await _context.Tickets.AddAsync(ticket);
+        //    await _context.SaveChangesAsync();
 
-            var createdTicket = await _context.Tickets
-                .Include(t => t.Screening).ThenInclude(s => s.Movie)
-                .Include(t => t.Screening).ThenInclude(s => s.Room)
-                .Include(t => t.Order)
-                .FirstOrDefaultAsync(t => t.Id == ticket.Id);
+        //    var createdTicket = await _context.Tickets
+        //        .Include(t => t.Screening).ThenInclude(s => s.Movie)
+        //        .Include(t => t.Screening).ThenInclude(s => s.Room)
+        //        .Include(t => t.Order)
+        //        .FirstOrDefaultAsync(t => t.Id == ticket.Id);
 
-            return _mapper.Map<TicketDto>(createdTicket);
+        //    return _mapper.Map<TicketDto>(createdTicket);
 
-        }
+        //}
 
 
         public async Task<TicketDto> UpdateTicketAsync(int id, TicketUpdateDto ticketDto)
@@ -139,26 +139,26 @@ namespace TicketManager.Services
             return _mapper.Map<TicketDto>(ticket);
         }
 
-        public async Task<bool> DeleteTicketAsync(int id)
-        {
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null)
-            {
-                throw new KeyNotFoundException(message: "Ticket not found.");
-            }
+        //public async Task<bool> DeleteTicketAsync(int id)
+        //{
+        //    var ticket = await _context.Tickets.FindAsync(id);
+        //    if (ticket == null)
+        //    {
+        //        throw new KeyNotFoundException(message: "Ticket not found.");
+        //    }
 
-            if (ticket.Screening.ScreeningTime < DateTime.Now || ticket.Screening.ScreeningTime.AddHours(-4) > DateTime.Now)
-            {
-                _context.Tickets.Remove(ticket);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                throw new TimeoutException("The screening will be starting within 4 hours!");
-            }
+        //    if (ticket.Screening.ScreeningTime < DateTime.Now || ticket.Screening.ScreeningTime.AddHours(-4) > DateTime.Now)
+        //    {
+        //        _context.Tickets.Remove(ticket);
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        throw new TimeoutException("The screening will be starting within 4 hours!");
+        //    }
             
-        }
+        //}
 
     }
 }
