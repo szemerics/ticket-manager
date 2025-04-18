@@ -34,7 +34,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RoleUser", (string)null);
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Movie", b =>
@@ -71,7 +71,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Order", b =>
@@ -109,7 +109,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Role", b =>
@@ -129,7 +129,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Room", b =>
@@ -155,7 +155,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Screening", b =>
@@ -187,7 +187,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Screenings", (string)null);
+                    b.ToTable("Screenings");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Seat", b =>
@@ -217,7 +217,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("ScreeningId");
 
-                    b.ToTable("Seat", (string)null);
+                    b.ToTable("Seat");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Setting", b =>
@@ -239,7 +239,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Settings", (string)null);
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.Ticket", b =>
@@ -276,7 +276,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasIndex("SeatId");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("TicketManager.DataContext.Entities.User", b =>
@@ -307,7 +307,7 @@ namespace TicketManager.DataContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RoleUser", b =>

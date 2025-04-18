@@ -116,7 +116,7 @@ namespace TicketManager.DataContext.Migrations
                 column: "SeatId",
                 principalTable: "Seat",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />

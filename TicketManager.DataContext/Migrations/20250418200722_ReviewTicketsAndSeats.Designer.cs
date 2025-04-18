@@ -12,7 +12,7 @@ using TicketManager.DataContext.Context;
 namespace TicketManager.DataContext.Migrations
 {
     [DbContext(typeof(TicketDbContext))]
-    [Migration("20250418171911_ReviewTicketsAndSeats")]
+    [Migration("20250418200722_ReviewTicketsAndSeats")]
     partial class ReviewTicketsAndSeats
     {
         /// <inheritdoc />
@@ -390,7 +390,7 @@ namespace TicketManager.DataContext.Migrations
                     b.HasOne("TicketManager.DataContext.Entities.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
