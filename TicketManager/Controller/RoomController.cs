@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
@@ -7,6 +8,7 @@ namespace TicketManager.Controller
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize(Roles = "Admin")]
     public class RoomController : ControllerBase
     {
         private readonly IRoomService _roomService;
@@ -16,27 +18,12 @@ namespace TicketManager.Controller
             _roomService = roomService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetRooms()
-        {
-            var rooms = await _roomService.GetRoomsAsync();
-            return Ok(rooms);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRoomById(int id)
-        {
-            var room = await _roomService.GetRoomByIdAsync(id);
-            if (room == null)
-                return NotFound();
-            return Ok(room);
-        }
 
         [HttpPost]
         public async Task<IActionResult> CreateRoom([FromBody] RoomCreateDto dto)
         {
             var createdRoom = await _roomService.CreateRoomAsync(dto);
-            return CreatedAtAction(nameof(GetRoomById), new { id = createdRoom.Id }, createdRoom);
+            return CreatedAtAction(nameof(_roomService.GetRoomByIdAsync), new { id = createdRoom.Id }, createdRoom);
         }
 
         [HttpPut("{id}")]

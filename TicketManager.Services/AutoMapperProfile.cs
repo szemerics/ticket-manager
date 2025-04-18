@@ -38,7 +38,8 @@ namespace TicketManager.Services
             // User Mapping
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UserRegisterDto, User>();
-            CreateMap<UserUpdateDto, User>();
+            CreateMap<UserUpdateDto, User>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
 
             // Order Mapping

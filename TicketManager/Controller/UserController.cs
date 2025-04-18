@@ -19,14 +19,9 @@ namespace TicketManager.Controller
             _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            var users = await _userService.GetUsersAsync();
-            return Ok(users);
-        }
-
+        
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -51,20 +46,34 @@ namespace TicketManager.Controller
             return Ok(new { Token = result });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto dto)
+        [HttpGet]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetProfile()
         {
             var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            var updatedUser = await _userService.UpdateUserAsync(id, dto);
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+            return Ok(user);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateDto dto)
+        {
+            var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            var updatedUser = await _userService.UpdateUserAsync(userId, dto);
             if (updatedUser == null)
                 return NotFound();
             return Ok(updatedUser);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [HttpDelete]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> DeleteUser()
         {
-            var result = await _userService.DeleteUserAsync(id);
+            var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            var result = await _userService.DeleteUserAsync(userId);
             if (!result)
                 return NotFound();
             return NoContent();

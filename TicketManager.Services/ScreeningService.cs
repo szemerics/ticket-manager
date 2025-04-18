@@ -13,8 +13,9 @@ namespace TicketManager.Services
 {
     public interface IScreeningService
     {
-        Task<IEnumerable<ScreeningDto>> GetScreeningsAsync();
-        Task<ScreeningDto> GetScreeningByIdAsync(int id);
+        //Task<IEnumerable<ScreeningDto>> GetScreeningsAsync();
+        Task<ScreeningDto> GetScreeningByIdAsync(int screeningId);
+        Task<ScreeningDto> GetScreeningByMovieIdAsync(int movieId);
         Task<ScreeningDto> CreateScreeningAsync(ScreeningCreateDto screening);
         Task<ScreeningDto> UpdateScreeningAsync(int id, ScreeningUpdateDto screening);
         Task<bool> DeleteScreeningAsync(int id);
@@ -63,7 +64,6 @@ namespace TicketManager.Services
             return _mapper.Map<ScreeningDto>(createdScreening);
         }
 
-
         public async Task<bool> DeleteScreeningAsync(int id)
         {
             var screening = await _context.Screenings.FindAsync(id);
@@ -95,15 +95,26 @@ namespace TicketManager.Services
             return _mapper.Map<ScreeningDto>(createdScreening);
         }
 
-        public async Task<IEnumerable<ScreeningDto>> GetScreeningsAsync()
+        public async Task<ScreeningDto> GetScreeningByMovieIdAsync(int movieId)
         {
-            var screenings = await _context.Screenings
+            var screening = await _context.Screenings
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
                 .Include(s => s.Tickets)
-                .ToListAsync();
-            return _mapper.Map<IEnumerable<ScreeningDto>>(screenings);
+                .FirstOrDefaultAsync(s => s.MovieId == movieId);
+
+            return _mapper.Map<ScreeningDto>(screening);
         }
+
+        //public async Task<IEnumerable<ScreeningDto>> GetScreeningsAsync()
+        //{
+        //    var screenings = await _context.Screenings
+        //        .Include(s => s.Movie)
+        //        .Include(s => s.Room)
+        //        .Include(s => s.Tickets)
+        //        .ToListAsync();
+        //    return _mapper.Map<IEnumerable<ScreeningDto>>(screenings);
+        //}
 
         public async Task<ScreeningDto> UpdateScreeningAsync(int id, ScreeningUpdateDto screeningDto)
         {

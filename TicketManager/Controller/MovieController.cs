@@ -7,7 +7,7 @@ namespace TicketManager.Controller
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
@@ -17,7 +17,6 @@ namespace TicketManager.Controller
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetMovies()
         {
             var movies = await _movieService.GetMoviesAsync();
@@ -25,7 +24,6 @@ namespace TicketManager.Controller
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetMovieById(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
@@ -33,7 +31,6 @@ namespace TicketManager.Controller
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateMovie([FromBody] MovieCreateDto movieDto)
         {
             var movie = await _movieService.CreateMovieAsync(movieDto);
@@ -41,7 +38,6 @@ namespace TicketManager.Controller
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieUpdateDto movieDto)
         {
             var movie = await _movieService.UpdateMovieAsync(id, movieDto);
@@ -49,7 +45,6 @@ namespace TicketManager.Controller
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             var result = await _movieService.DeleteMovieAsync(id);

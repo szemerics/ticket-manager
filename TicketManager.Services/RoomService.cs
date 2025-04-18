@@ -11,7 +11,6 @@ namespace TicketManager.Services
 {
     public interface IRoomService
     {
-        Task<IEnumerable<RoomDto>> GetRoomsAsync();
         Task<RoomDto> GetRoomByIdAsync(int id);
         Task<RoomDto> CreateRoomAsync(RoomCreateDto dto);
         Task<RoomDto> UpdateRoomAsync(int id, RoomUpdateDto dto);
@@ -27,12 +26,6 @@ namespace TicketManager.Services
         {
             _context = context;
             _mapper = mapper;
-        }
-
-        public async Task<IEnumerable<RoomDto>> GetRoomsAsync()
-        {
-            var rooms = await _context.Rooms.ToListAsync();
-            return _mapper.Map<IEnumerable<RoomDto>>(rooms);
         }
 
         public async Task<RoomDto> GetRoomByIdAsync(int id)
