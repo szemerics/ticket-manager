@@ -17,6 +17,7 @@ namespace TicketManager.DataContext.Context
         }
 
         public DbSet<Entities.Movie> Movies { get; set; }
+        public DbSet<Entities.Seat> Seats { get; set; }
         public DbSet<Entities.Order> Orders { get; set; }
         public DbSet<Entities.Role> Roles { get; set; }
         public DbSet<Entities.Room> Rooms { get; set; }
@@ -34,6 +35,12 @@ namespace TicketManager.DataContext.Context
                 .WithMany()
                 .HasForeignKey(t => t.SeatId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Screening)
+                .WithMany(s => s.Tickets)
+                .HasForeignKey(t => t.ScreeningId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

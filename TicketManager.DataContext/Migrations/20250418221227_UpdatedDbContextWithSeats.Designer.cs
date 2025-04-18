@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketManager.DataContext.Context;
 
@@ -11,9 +12,11 @@ using TicketManager.DataContext.Context;
 namespace TicketManager.DataContext.Migrations
 {
     [DbContext(typeof(TicketDbContext))]
-    partial class TicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250418221227_UpdatedDbContextWithSeats")]
+    partial class UpdatedDbContextWithSeats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,7 +262,7 @@ namespace TicketManager.DataContext.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ScreeningId")
+                    b.Property<int?>("ScreeningId")
                         .HasColumnType("int");
 
                     b.Property<int>("SeatId")
@@ -380,11 +383,9 @@ namespace TicketManager.DataContext.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TicketManager.DataContext.Entities.Screening", "Screening")
+                    b.HasOne("TicketManager.DataContext.Entities.Screening", null)
                         .WithMany("Tickets")
-                        .HasForeignKey("ScreeningId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("ScreeningId");
 
                     b.HasOne("TicketManager.DataContext.Entities.Seat", "Seat")
                         .WithMany()
@@ -393,8 +394,6 @@ namespace TicketManager.DataContext.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-
-                    b.Navigation("Screening");
 
                     b.Navigation("Seat");
                 });

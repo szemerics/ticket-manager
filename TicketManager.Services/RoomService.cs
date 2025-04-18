@@ -11,10 +11,10 @@ namespace TicketManager.Services
 {
     public interface IRoomService
     {
-        Task<RoomDto> GetRoomByIdAsync(int id);
+        Task<RoomDto> GetRoomByIdAsync(int roomId);
         Task<RoomDto> CreateRoomAsync(RoomCreateDto dto);
-        Task<RoomDto> UpdateRoomAsync(int id, RoomUpdateDto dto);
-        Task<bool> DeleteRoomAsync(int id);
+        Task<RoomDto> UpdateRoomAsync(int roomId, RoomUpdateDto dto);
+        Task<bool> DeleteRoomAsync(int roomId);
     }
 
     public class RoomService : IRoomService
@@ -28,9 +28,9 @@ namespace TicketManager.Services
             _mapper = mapper;
         }
 
-        public async Task<RoomDto> GetRoomByIdAsync(int id)
+        public async Task<RoomDto> GetRoomByIdAsync(int roomId)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms.FindAsync(roomId);
             if (room == null)
                 throw new KeyNotFoundException(message: "Room not found.");
 
@@ -45,9 +45,9 @@ namespace TicketManager.Services
             return _mapper.Map<RoomDto>(room);
         }
 
-        public async Task<RoomDto> UpdateRoomAsync(int id, RoomUpdateDto roomDto)
+        public async Task<RoomDto> UpdateRoomAsync(int roomId, RoomUpdateDto roomDto)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms.FindAsync(roomId);
             if (room == null)
                 throw new KeyNotFoundException(message: "Room not found.");
             _mapper.Map(roomDto, room);
@@ -55,9 +55,9 @@ namespace TicketManager.Services
             return _mapper.Map<RoomDto>(room);
         }
 
-        public async Task<bool> DeleteRoomAsync(int id)
+        public async Task<bool> DeleteRoomAsync(int roomId)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms.FindAsync(roomId);
             if (room == null)
             {
                 throw new KeyNotFoundException(message: "Room not found.");

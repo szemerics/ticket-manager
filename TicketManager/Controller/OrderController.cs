@@ -39,8 +39,8 @@ namespace TicketManager.Controller
 
 
         [HttpPost]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto dto)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto orderDto)
         {
             var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
@@ -49,8 +49,8 @@ namespace TicketManager.Controller
                 return Unauthorized("User ID not found in token.");
             }
 
-            var createdOrder = await _orderService.CreateOrderAsync(dto, userId);
-            return CreatedAtAction(nameof(_orderService.GetOrderByIdAsync), new { id = createdOrder.Id }, createdOrder);
+            var createdOrder = await _orderService.CreateOrderAsync(orderDto, userId);
+            return CreatedAtAction(nameof(GetOrdersByUserId), new { userId = createdOrder.Id }, createdOrder);
         }
 
         [HttpPost]

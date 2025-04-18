@@ -19,11 +19,21 @@ namespace TicketManager.Controller
         }
 
 
+        [HttpGet("{roomId}")]
+        public async Task<IActionResult> GetRoomById(int roomId)
+        {
+            var room = await _roomService.GetRoomByIdAsync(roomId);
+            if (room == null)
+                return NotFound();
+            return Ok(room);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreateRoom([FromBody] RoomCreateDto dto)
         {
             var createdRoom = await _roomService.CreateRoomAsync(dto);
-            return CreatedAtAction(nameof(_roomService.GetRoomByIdAsync), new { id = createdRoom.Id }, createdRoom);
+            return CreatedAtAction(nameof(GetRoomById), new { roomId = createdRoom.Id }, createdRoom);
         }
 
         [HttpPut("{id}")]

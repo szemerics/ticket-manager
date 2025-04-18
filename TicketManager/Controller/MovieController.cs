@@ -24,8 +24,8 @@ namespace TicketManager.Controller
             return Ok(movies);
         }
 
-
-        private async Task<IActionResult> GetMovieById(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMovieById(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
             return Ok(movie);

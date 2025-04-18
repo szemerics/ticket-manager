@@ -12,13 +12,20 @@ namespace TicketManager.DataContext.Dtos
         public int Id { get; set; }
         public DateTime PurchaseDate { get; set; }
         public decimal TotalPrice { get; set; }
-        public UserDto? User { get; set; }
+        public int ScreeningId { get; set; }
+        public int? UserId { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public List<TicketDto> Tickets { get; set; }
+        
+
+
+        public User? User { get; set; }
+        public Screening Screening { get; set; }
+        public List<Ticket> Tickets { get; set; }
     }
     public class OrderCreateDto
     {
-        public List<int> TicketIds { get; set; }
+        public int ScreeningId { get; set; }
+        public List<TicketCreateDto> Tickets { get; set; }
     }
 }

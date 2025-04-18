@@ -11,21 +11,23 @@ namespace TicketManager.DataContext.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Capacity { get; set; }
-        public List<DateTime> ScreeningTime { get; set; }
-        public List<int> Seats { get; set; }
+        public int RowNumber { get; set; }
+        public int ColumnNumber { get; set; }
 
+        public List<Screening> Screenings { get; set; }
     }
 
     public class RoomCreateDto
     {
         public string Name { get; set; }
-        public int Capacity { get; set; }
+        public int RowNumber { get; set; }
+        public int ColumnNumber { get; set; }
     }
 
     public class RoomUpdateDto
     {
         public string Name { get; set; }
-        public int Capacity { get; set; }
+        public int RowNumber { get; set; }
+        public int ColumnNumber { get; set; }
     }
 }

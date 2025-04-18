@@ -16,10 +16,12 @@ namespace TicketManager.DataContext.Entities
         public TicketType? Type { get; set; }
         public int OrderId { get; set; }
         public int SeatId { get; set; }
+        public int ScreeningId { get; set; }
 
 
 
         public Order Order { get; set; }
         public Seat Seat { get; set; }
+        public Screening Screening { get; set; }
     }
 }
