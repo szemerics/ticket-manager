@@ -18,9 +18,9 @@ namespace TicketManager.Services
     {
 
         // Admin functions
-        Task<UserDto> GetUserByIdAsync(int id);
-        Task<bool> DeleteUserAsync(int id);
-        Task<UserDto> UpdateUserAsync(int id, UserUpdateDto dto);
+        Task<UserDto> GetUserByIdAsync(int userId);
+        Task<bool> DeleteUserAsync(int userId);
+        Task<UserDto> UpdateUserAsync(int userId, UserUpdateDto dto);
 
         // Client functions
         Task<UserDto> RegisterAsync(UserRegisterDto userDto);
@@ -44,10 +44,19 @@ namespace TicketManager.Services
         }
 
 
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        public async Task<UserDto> GetUserByIdAsync(int userId)
         {
-            var user = await _context.Users.FindAsync(id);
-            return user == null ? null : _mapper.Map<UserDto>(user);
+            var user = await _context.Users
+                .Include(u => u.Roles)
+                .Where(user => user.Id == userId)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException(message: "User not found.");
+            }
+
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<UserDto> RegisterAsync(UserRegisterDto userDto)
