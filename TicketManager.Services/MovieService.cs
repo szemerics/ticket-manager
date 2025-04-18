@@ -35,6 +35,7 @@ namespace TicketManager.Services
         {
             var movies = await _context.Movies
                 .Include(m => m.Screenings)
+                .Where(m => !m.IsDeleted)
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<MovieDto>>(movies);
@@ -94,7 +95,8 @@ namespace TicketManager.Services
                 throw new InvalidOperationException("Cannot delete a movie that has screenings.");
             }
 
-            _context.Movies.Remove(movie);
+            movie.IsDeleted = true; // Soft delete
+            _context.Movies.Update(movie);
             await _context.SaveChangesAsync();
             return true;
         }

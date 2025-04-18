@@ -24,9 +24,8 @@ namespace TicketManager.Controller
             return Ok(movies);
         }
 
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetMovieById(int id)
+
+        private async Task<IActionResult> GetMovieById(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
             return Ok(movie);

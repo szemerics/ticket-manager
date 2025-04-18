@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TicketManager.DataContext.Dtos;
 using TicketManager.Services;
 
@@ -15,35 +16,64 @@ namespace TicketManager.Controller
         {
             _orderService = orderService;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetOrders()
+        [Authorize(Roles = "Admin,Cashier")]
+        public async Task<IActionResult> GetOrdersByUserId(int userId)
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
             return Ok(orders);
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
+
+        [HttpGet]
+        [Authorize(Roles = "Customer")]
+
+        public async Task<IActionResult> GetMyOrders()
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
-            if (order == null)
-                return NotFound();
-            return Ok(order);
+            var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+            return Ok(orders);
         }
 
 
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto dto)
         {
-            var createdOrder = await _orderService.CreateOrderAsync(dto);
-            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
+            var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+
+            if (string.IsNullOrEmpty(userId.ToString()))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var createdOrder = await _orderService.CreateOrderAsync(dto, userId);
+            return CreatedAtAction(nameof(_orderService.GetOrderByIdAsync), new { id = createdOrder.Id }, createdOrder);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateOrderByAnonymous([FromBody] OrderCreateDto dto, string email, string phone)
+        {
+            var createdOrder = await _orderService.CreateOrderByAnonymousAsync(dto, email, phone);
+            return CreatedAtAction(nameof(_orderService.GetOrderByIdAsync), new { id = createdOrder.Id }, createdOrder);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Cashier")]
+        public async Task<IActionResult> CreateOrderByCashier([FromBody] OrderCreateDto dto)
+        {
+            var createdOrder = await _orderService.CreateOrderByCashierAsync(dto);
+            return CreatedAtAction(nameof(_orderService.GetOrderByIdAsync), new { id = createdOrder.Id }, createdOrder);
         }
 
 
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Cashier,Customer")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var deleted = await _orderService.DeleteOrderAsync(id);

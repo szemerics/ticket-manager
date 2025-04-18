@@ -12,12 +12,13 @@ namespace TicketManager.DataContext.Dtos
         public int Id { get; set; }
         public DateTime PurchaseDate { get; set; }
         public decimal TotalPrice { get; set; }
-        public UserDto User { get; set; }
+        public UserDto? User { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
         public List<TicketDto> Tickets { get; set; }
     }
     public class OrderCreateDto
     {
-        public int UserId { get; set; }
         public List<int> TicketIds { get; set; }
     }
 }
