@@ -15,8 +15,8 @@ namespace TicketManager.DataContext.Dtos
         public int ScreeningId { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        
-        public int TicketsQuantity { get; set; }
+
+        public required List<OrderTicketDto> Tickets { get; set; }
     }
     public class OrderCreateDto
     {

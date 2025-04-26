@@ -291,6 +291,7 @@ namespace TicketManager.Services
             var orders = await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Tickets)
+                .ThenInclude(t => t.Seat)
                 .Where(o => o.UserId == userId)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<OrderDto>>(orders);

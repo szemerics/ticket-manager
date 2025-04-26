@@ -30,4 +30,14 @@ namespace TicketManager.DataContext.Dtos
         //public TicketType Type { get; set; }
         public int SeatId { get; set; }
     }
+
+    public class OrderTicketDto
+    {
+        public decimal Price { get; set; }
+        public TicketType? Type { get; set; }
+
+
+
+        public OrderSeatDto Seat { get; set; }
+    }
 }

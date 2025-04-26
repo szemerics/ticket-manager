@@ -18,7 +18,7 @@ namespace TicketManager.DataContext.Dtos
 
         // enum ints for categories
         public List<MovieCategory> Categories { get; set; }
-        public List<ScreeningDto> Screenings { get; set; }
+        public List<MovieScreeningDto> Screenings { get; set; }
     }
 
 

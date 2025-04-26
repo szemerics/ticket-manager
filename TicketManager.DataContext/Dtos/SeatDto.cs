@@ -18,4 +18,10 @@ namespace TicketManager.DataContext.Dtos
 
 
     }
+    public class OrderSeatDto
+    {
+        public int Id { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+    }
 }

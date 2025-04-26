@@ -7,11 +7,6 @@ using TicketManager.DataContext.Entities;
 
 namespace TicketManager.DataContext.Dtos
 {
-    //public class TicketShortDto {
-    //    public int Id { get; set; }
-    //    public TicketType? Type { get; set; }
-    //    public decimal Price { get; set; }
-    //}
 
     public class ScreeningDto
     {
@@ -23,6 +18,10 @@ namespace TicketManager.DataContext.Dtos
 
         public List<SeatDto> Seats { get; set; }
         //public List<Ticket> Tickets { get; set; }
+    }
+    public class  MovieScreeningDto
+    {
+        public DateTime ScreeningTime { get; set; }
     }
 
     public class ScreeningCreateDto
