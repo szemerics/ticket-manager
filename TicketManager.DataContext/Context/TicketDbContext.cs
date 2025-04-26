@@ -41,6 +41,24 @@ namespace TicketManager.DataContext.Context
                 .WithMany(s => s.Tickets)
                 .HasForeignKey(t => t.ScreeningId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Settings Config
+            modelBuilder.Entity<Setting>().HasData(
+                new Setting { Id = 1, Key = "BaseScreeningPrice", Value="2500"}, // Default ticket price in HUF
+                new Setting { Id = 2, Key = "StudentTicketDiscount", Value = "15"}, // Student discount in %
+                new Setting { Id = 3, Key = "SeniorTicketDiscount", Value = "15" }, // Senior discount in %
+                new Setting { Id = 4, Key = "DisabledTicketDiscount", Value = "15" }, // Disabled discount in %
+                new Setting { Id = 5, Key = "EarlyTicketDiscount", Value = "15" }, // Early bird discount in %
+                new Setting { Id = 6, Key = "NormalTicketDiscount", Value = "0" } // Normal ticket discount in %
+            );
+
+            // Role Config
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "Admin"},
+                new Role { Id = 2, Name = "Cashier" },
+                new Role { Id = 3, Name = "Customer" }
+            );
+
         }
     }
 }

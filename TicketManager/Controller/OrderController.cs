@@ -27,7 +27,6 @@ namespace TicketManager.Controller
 
         [HttpGet]
         [Authorize(Roles = "Customer")]
-
         public async Task<IActionResult> GetMyOrders()
         {
             var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
