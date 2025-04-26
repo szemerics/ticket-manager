@@ -17,7 +17,7 @@ namespace TicketManager.Services
         Task<ScreeningDto> GetScreeningByIdAsync(int screeningId);
         Task<ScreeningDto> GetScreeningByMovieIdAsync(int movieId);
         Task<ScreeningDto> CreateScreeningAsync(ScreeningCreateDto screening);
-        Task<ScreeningDto> UpdateScreeningAsync(int id, ScreeningUpdateDto screening);
+        Task<ScreeningDto> UpdateScreeningAsync(int screeningId, ScreeningUpdateDto screening);
         Task<bool> DeleteScreeningAsync(int screeningId);
     }
     public class ScreeningService : IScreeningService
@@ -90,9 +90,9 @@ namespace TicketManager.Services
             return _mapper.Map<ScreeningDto>(screening);
         }
 
-        public async Task<bool> DeleteScreeningAsync(int id)
+        public async Task<bool> DeleteScreeningAsync(int screeningId)
         {
-            var screening = await _context.Screenings.FindAsync(id);
+            var screening = await _context.Screenings.FindAsync(screeningId);
             if (screening == null)
             {
                 throw new KeyNotFoundException(message: "Screening not found.");
@@ -141,13 +141,13 @@ namespace TicketManager.Services
             return _mapper.Map<IEnumerable<ScreeningDto>>(screenings);
         }
 
-        public async Task<ScreeningDto> UpdateScreeningAsync(int id, ScreeningUpdateDto screeningDto)
+        public async Task<ScreeningDto> UpdateScreeningAsync(int screeningId, ScreeningUpdateDto screeningDto)
         {
             var screening = await _context.Screenings
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
                 .Include(s => s.Tickets)
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == screeningId);
 
             if (screening == null)
             {

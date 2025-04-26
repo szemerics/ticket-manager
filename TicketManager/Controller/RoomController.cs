@@ -36,19 +36,19 @@ namespace TicketManager.Controller
             return CreatedAtAction(nameof(GetRoomById), new { roomId = createdRoom.Id }, createdRoom);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomUpdateDto dto)
+        [HttpPut("{roomId}")]
+        public async Task<IActionResult> UpdateRoom(int roomId, [FromBody] RoomUpdateDto dto)
         {
-            var updatedRoom = await _roomService.UpdateRoomAsync(id, dto);
+            var updatedRoom = await _roomService.UpdateRoomAsync(roomId, dto);
             if (updatedRoom == null)
                 return NotFound();
             return Ok(updatedRoom);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoom(int id)
+        [HttpDelete("{roomId}")]
+        public async Task<IActionResult> DeleteRoom(int roomId)
         {
-            var deleted = await _roomService.DeleteRoomAsync(id);
+            var deleted = await _roomService.DeleteRoomAsync(roomId);
             if (!deleted)
                 return NotFound();
             return NoContent();

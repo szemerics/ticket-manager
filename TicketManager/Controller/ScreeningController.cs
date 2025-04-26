@@ -18,17 +18,12 @@ namespace TicketManager.Controller
             _screeningService = screeningService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetScreenings()
-        //{
-        //    var screenings = await _screeningService.GetScreeningsAsync();
-        //    return Ok(screenings);
-        //}
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetScreeningById(int id)
+        [HttpGet("{screeningId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetScreeningById(int screeningId)
         {
-            var screening = await _screeningService.GetScreeningByIdAsync(id);
+            var screening = await _screeningService.GetScreeningByIdAsync(screeningId);
             if (screening == null)
                 return NotFound();
             return Ok(screening);
@@ -51,7 +46,7 @@ namespace TicketManager.Controller
         public async Task<IActionResult> CreateScreening([FromBody] ScreeningCreateDto dto)
         {
             var createdScreening = await _screeningService.CreateScreeningAsync(dto);
-            return CreatedAtAction(nameof(GetScreeningById), new { id = createdScreening.Id }, createdScreening);
+            return CreatedAtAction(nameof(GetScreeningById), new { screeningId = createdScreening.Id }, createdScreening);
         }
 
         [HttpPut("{screeningId}")]

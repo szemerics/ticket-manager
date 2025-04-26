@@ -18,9 +18,9 @@ namespace TicketManager.Services
         Task<OrderDto> CreateOrderAsync(OrderCreateDto orderDto, int userId);
         Task<OrderDto> CreateOrderByCashierAsync(OrderCreateDto orderDto);
         Task<OrderDto> CreateOrderByAnonymousAsync(OrderCreateDto orderDto, string email, string phone);
-        Task<OrderDto> GetOrderByIdAsync(int id);
+        Task<OrderDto> GetOrderByIdAsync(int orderId);
         Task<IEnumerable<OrderDto>> GetAllOrdersAsync();
-        Task<bool> DeleteOrderAsync(int id);
+        Task<bool> DeleteOrderAsync(int orderId);
         Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(int userId);
     }
     public class OrderService : IOrderService

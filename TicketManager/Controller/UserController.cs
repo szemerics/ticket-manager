@@ -9,6 +9,7 @@ namespace TicketManager.Controller
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+
     [Authorize]
     public class UserController : ControllerBase
     {
@@ -20,11 +21,11 @@ namespace TicketManager.Controller
         }
 
         
-        [HttpGet("{id}")]
+        [HttpGet("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int userId)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(userId);
             if (user == null)
                 return NotFound();
             return Ok(user);

@@ -16,38 +16,14 @@ namespace TicketManager.Controller
             _ticketService = ticketService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetTickets()
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateTicket(int id, [FromBody] TicketUpdateDto dto)
         //{
-        //    var tickets = await _ticketService.GetTicketsAsync();
-        //    return Ok(tickets);
-        //}
-
-
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetTicketById(int id)
-        //{
-        //    var ticket = await _ticketService.GetTicketByIdAsync(id);
-        //    if (ticket == null)
+        //    var updatedTicket = await _ticketService.UpdateTicketAsync(id, dto);
+        //    if (updatedTicket == null)
         //        return NotFound();
-        //    return Ok(ticket);
+        //    return Ok(updatedTicket);
         //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> CreateTicket([FromBody] TicketCreateDto dto)
-        //{
-        //    var createdTicket = await _ticketService.CreateTicketAsync(dto);
-        //    return CreatedAtAction(nameof(GetTicketById), new { id = createdTicket.Id }, createdTicket);
-        //}
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTicket(int id, [FromBody] TicketUpdateDto dto)
-        {
-            var updatedTicket = await _ticketService.UpdateTicketAsync(id, dto);
-            if (updatedTicket == null)
-                return NotFound();
-            return Ok(updatedTicket);
-        }
 
         //[HttpDelete("{id}")]
         //public async Task<IActionResult> DeleteTicket(int id)

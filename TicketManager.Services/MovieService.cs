@@ -14,10 +14,10 @@ namespace TicketManager.Services
     public interface IMovieService
     {
         Task<IEnumerable<MovieDto>> GetMoviesAsync();
-        Task<MovieDto> GetMovieByIdAsync(int id);
+        Task<MovieDto> GetMovieByIdAsync(int movieId);
         Task<MovieDto> CreateMovieAsync(MovieCreateDto movie);
-        Task<MovieDto> UpdateMovieAsync(int id, MovieUpdateDto movie);
-        Task<bool> DeleteMovieAsync(int id);
+        Task<MovieDto> UpdateMovieAsync(int movieId, MovieUpdateDto movie);
+        Task<bool> DeleteMovieAsync(int movieId);
     }
 
     public class MovieService : IMovieService
@@ -41,9 +41,12 @@ namespace TicketManager.Services
             return _mapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
-        public async Task<MovieDto> GetMovieByIdAsync(int id)
+        public async Task<MovieDto> GetMovieByIdAsync(int movieId)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies
+                .Include(m => m.Screenings)
+                .Where(m => !m.IsDeleted)
+                .FirstOrDefaultAsync(m => m.Id == movieId);
             if (movie == null)
             {
                 throw new KeyNotFoundException(message: "Movie not found.");
@@ -62,9 +65,9 @@ namespace TicketManager.Services
 
         }
 
-        public async Task<MovieDto> UpdateMovieAsync(int id, MovieUpdateDto movieDto)
+        public async Task<MovieDto> UpdateMovieAsync(int movieId, MovieUpdateDto movieDto)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(movieId);
             if (movie == null)
             {
                 throw new KeyNotFoundException(message: "Movie not found.");
@@ -78,9 +81,9 @@ namespace TicketManager.Services
 
         }
 
-        public async Task<bool> DeleteMovieAsync(int id)
+        public async Task<bool> DeleteMovieAsync(int movieId)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(movieId);
             if (movie == null)
             {
                 throw new KeyNotFoundException("Movie not found.");
@@ -88,7 +91,7 @@ namespace TicketManager.Services
 
             // Check if the movie has any screenings
             var screenings = await _context.Screenings
-                .Where(s => s.MovieId == id)
+                .Where(s => s.MovieId == movieId)
                 .ToListAsync();
             if (screenings.Any())
             {

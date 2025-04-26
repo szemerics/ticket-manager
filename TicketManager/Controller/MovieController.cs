@@ -24,10 +24,11 @@ namespace TicketManager.Controller
             return Ok(movies);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMovieById(int id)
+        [HttpGet("{movieId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMovieById(int movieId)
         {
-            var movie = await _movieService.GetMovieByIdAsync(id);
+            var movie = await _movieService.GetMovieByIdAsync(movieId);
             return Ok(movie);
         }
 
@@ -36,22 +37,22 @@ namespace TicketManager.Controller
         public async Task<IActionResult> CreateMovie([FromBody] MovieCreateDto movieDto)
         {
             var movie = await _movieService.CreateMovieAsync(movieDto);
-            return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
+            return CreatedAtAction(nameof(GetMovieById), new { movieId = movie.Id }, movie);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{movieId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieUpdateDto movieDto)
+        public async Task<IActionResult> UpdateMovie(int movieId, [FromBody] MovieUpdateDto movieDto)
         {
-            var movie = await _movieService.UpdateMovieAsync(id, movieDto);
+            var movie = await _movieService.UpdateMovieAsync(movieId, movieDto);
             return Ok(movie);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{movieId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteMovie(int id)
+        public async Task<IActionResult> DeleteMovie(int movieId)
         {
-            var result = await _movieService.DeleteMovieAsync(id);
+            var result = await _movieService.DeleteMovieAsync(movieId);
             if (result)
             {
                 return NoContent();
