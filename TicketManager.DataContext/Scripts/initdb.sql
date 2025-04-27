@@ -71,7 +71,12 @@
  INSERT INTO RoleUser (RolesId, UsersId) 
  VALUES 
  (1, 1),  -- Admin
+ (2, 1),  -- Cashier
+ (3, 1),  -- Cashier
  (1, 2),  -- Admin
+ (2, 2),  -- Cashier
+ (3, 2),  -- Customer
+ --- Admin Users Above
  (3, 3),  -- Cashier
  (3, 4),  -- Cashier
  (3, 5),  -- Cashier

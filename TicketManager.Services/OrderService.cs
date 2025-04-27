@@ -278,6 +278,7 @@ namespace TicketManager.Services
             var order = await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Tickets)
+                .ThenInclude(t => t.Seat)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
             if (order == null)
             {

@@ -30,7 +30,11 @@ namespace TicketManager.Services
 
         public async Task<RoomDto> GetRoomByIdAsync(int roomId)
         {
-            var room = await _context.Rooms.FindAsync(roomId);
+            var room = await _context.Rooms
+                .Include(r => r.Screenings)
+                .ThenInclude(s => s.Seats)
+                .Where(r => r.Id == roomId)
+                .FirstOrDefaultAsync();
             if (room == null)
                 throw new KeyNotFoundException(message: "Room not found.");
 

@@ -125,6 +125,7 @@ namespace TicketManager.Services
             var screening = await _context.Screenings
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
+                .Include(s => s.Seats)
                 .Include(s => s.Tickets)
                 .FirstOrDefaultAsync(s => s.MovieId == movieId);
 

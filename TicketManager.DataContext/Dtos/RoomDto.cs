@@ -14,7 +14,7 @@ namespace TicketManager.DataContext.Dtos
         public int RowNumber { get; set; }
         public int ColumnNumber { get; set; }
 
-        public List<Screening> Screenings { get; set; }
+        public List<ScreeningDto> Screenings { get; set; }
     }
 
     public class RoomCreateDto
