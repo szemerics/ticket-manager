@@ -1,35 +1,24 @@
+import "@mantine/core/styles.css";
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {emailKeyName, tokenKeyName} from "./constants/constants.ts";
+import { MantineProvider } from '@mantine/core';
+import { theme } from "./theme.ts";
+import Routing from "./routing/Routing.tsx";
+import { BrowserRouter } from 'react-router-dom';
+import { AuthContext } from './context/AuthContext.tsx';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [token, setToken] = useState(localStorage.getItem(tokenKeyName));
+  const [email, setEmail] = useState(localStorage.getItem(emailKeyName));
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return <MantineProvider theme={theme}>
+      <BrowserRouter>
+        <AuthContext.Provider value={{ token, setToken, email, setEmail }}>
+          <Routing/>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    </MantineProvider>
+
 }
 
 export default App
