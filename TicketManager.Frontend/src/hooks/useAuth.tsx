@@ -1,21 +1,30 @@
 import {useContext, useEffect} from "react";
 import {AuthContext} from "../context/AuthContext.tsx";
-import {emailKeyName, emailTokenKey, tokenKeyName} from "../constants/constants.ts";
+import {emailKeyName, emailTokenKey, roleKeyName, tokenKeyName} from "../constants/constants.ts";
 import {jwtDecode, JwtPayload} from "jwt-decode";
+import api from "../api/api.ts";
 
 interface CustomJwtPayload extends JwtPayload {
     [key: string]: any; // Allowing dynamic keys if necessary
 }
 
 const useAuth = () => {
-    const { token, setToken, email, setEmail  } = useContext(AuthContext);
+    const { token, setToken, email, setEmail, roles, setRoles  } = useContext(AuthContext);
     const isLoggedIn = !!token;
 
     const login = (email: string, password: string) => {
-        console.log({email, password});
-        const tokenFromBE = 'yourDotnetToken';
-        setToken(tokenFromBE); localStorage.setItem(tokenKeyName, tokenFromBE);
-        setEmail(email); localStorage.setItem(emailKeyName, email);
+        api.Auth.login(email, password).then(res => {
+            const tokenFromBE = res.data.token;
+            const decodedToken = jwtDecode(tokenFromBE);
+            
+            const userRoles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+            setRoles(userRoles); localStorage.setItem(roleKeyName, userRoles);
+            setToken(tokenFromBE); localStorage.setItem(tokenKeyName, tokenFromBE);
+            setEmail(email); localStorage.setItem(emailKeyName, email);
+        }, error => {
+            alert('Invalid credentials.')
+        })
     }
 
     const logout = () => {
