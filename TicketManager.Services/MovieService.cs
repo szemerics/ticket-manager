@@ -14,6 +14,7 @@ namespace TicketManager.Services
     public interface IMovieService
     {
         Task<IEnumerable<MovieDto>> GetMoviesAsync();
+        Task<IEnumerable<MovieCategoryDto>> GetMovieCategories();
         Task<MovieDto> GetMovieByIdAsync(int movieId);
         Task<MovieDto> CreateMovieAsync(MovieCreateDto movie);
         Task<MovieDto> UpdateMovieAsync(int movieId, MovieUpdateDto movie);
@@ -102,6 +103,15 @@ namespace TicketManager.Services
             _context.Movies.Update(movie);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<IEnumerable<MovieCategoryDto>> GetMovieCategories()
+        {
+            var categories = Enum.GetValues(typeof(MovieCategory))
+                            .Cast<MovieCategory>()
+                            .ToList();
+
+            return _mapper.Map<IEnumerable<MovieCategoryDto>>(categories);
         }
     }
 }

@@ -26,12 +26,12 @@ export const routes = [
     },
     {
       path: "movies/create",
-      component: <MovieForm/>,
+      component: <MovieForm isCreate={true}/>,
       isPrivate: true
     },
     {
       path: "movies/:id",
-      component: <MovieForm/>,
+      component: <MovieForm isCreate={false}/>,
       isPrivate: true
     }
 

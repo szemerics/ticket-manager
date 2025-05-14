@@ -9,7 +9,7 @@ const Movies = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.Movies.getMoives().then(res => {
+    api.Movies.getMovies().then(res => {
       setItems(res.data);
     })
   }, [])

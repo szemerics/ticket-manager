@@ -21,6 +21,9 @@ namespace TicketManager.Services
             CreateMap<Movie, MovieDto>().ReverseMap();
             CreateMap<MovieCreateDto, Movie>();
             CreateMap<MovieUpdateDto, Movie>();
+            CreateMap<MovieCategory, MovieCategoryDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => (int)src))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ToString()));
 
             // Screening Mappings
             CreateMap<Screening, ScreeningDto>().ReverseMap();
