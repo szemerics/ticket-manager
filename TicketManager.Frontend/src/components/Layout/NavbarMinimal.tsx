@@ -10,7 +10,7 @@ import classes from "./NavbarMinimalColored.module.css";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
 import useAuth from "../../hooks/useAuth.tsx";
-import { roleKeyName } from "../../constants/constants"; // NINCS .ts a végén!
+import { roleKeyName } from "../../constants/constants";
 
 interface NavbarLinkProps {
   icon: typeof IconHome;

@@ -7,7 +7,8 @@ const Movies = {
   getCategories: () => axionsInstance.get<{id: number, name: string}[]>('/Movie/GetCategories'),
   createMovie: (obj: ICreateMovie) => axionsInstance.post('/Movie/CreateMovie', obj),
   getMovieById: (id: string) => axionsInstance.get<IMovie>(`/Movie/GetMovieById/${id}`),
-  updateMovie: (id: string, obj: ICreateMovie) => axionsInstance.put(`/Movie/UpdateMovie/${id}`, obj)
+  updateMovie: (id: string, obj: ICreateMovie) => axionsInstance.put(`/Movie/UpdateMovie/${id}`, obj),
+  deleteMovie: (id: string) => axionsInstance.delete(`/Movie/DeleteMovie/${id}`)
 }
 
 const Auth = {

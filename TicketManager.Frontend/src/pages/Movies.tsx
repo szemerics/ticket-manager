@@ -1,8 +1,11 @@
-import { Card, Image, Text, Group, Badge, Table, Button } from '@mantine/core'
-import React, { useEffect, useState } from 'react'
+import { Card, Text, Table, Button, Flex, ActionIcon  } from '@mantine/core'
+import { useEffect, useState } from 'react'
 import api from '../api/api.ts';
 import { IMovie } from '../interfaces/IMovie.ts';
 import { useNavigate } from 'react-router-dom';
+import { modals } from '@mantine/modals';
+import {IconTrash, IconPencil} from "@tabler/icons-react";
+import { notifications } from '@mantine/notifications';
 
 const Movies = () => {
   const [items, setItems] = useState<IMovie[]>([]);
@@ -14,6 +17,47 @@ const Movies = () => {
     })
   }, [])
   
+ const openDeleteModal = (id: number, title: string) => {
+  modals.openConfirmModal({
+    title: `Are you sure you want to delete "${title}"?`,
+    centered: true,
+    children: (
+      <Text size="sm">
+        This action cannot be undone.
+      </Text>
+    ),
+    labels: { confirm: 'Delete', cancel: "Cancel" },
+    confirmProps: { color: 'red' },
+    onCancel: () =>
+      notifications.show({
+        position: 'bottom-center',
+        title: 'Cancelled',
+        color: 'gray',
+        message: 'Movie deletion was cancelled.',
+      }),
+    onConfirm: async () => {
+      try {
+        await api.Movies.deleteMovie(String(id));
+        setItems(prev => prev.filter(movie => movie.id !== id));
+        notifications.show({
+          position: 'bottom-center',
+          title: 'Deleted',
+          color: 'red',
+          message: 'Movie was successfully deleted.',
+        });
+      } catch (error) {
+        notifications.show({
+          position: 'bottom-center',
+          title: 'Error',
+          color: 'orange',
+          message: 'Failed to delete the movie.',
+        });
+        console.error('Delete error:', error);
+      }
+    },
+  });
+  };
+
 
   const rows = items.map((element) => (
     <Table.Tr key={element.id}>
@@ -22,10 +66,19 @@ const Movies = () => {
       <Table.Td>{element.lengthInMinutes}</Table.Td>
       <Table.Td>{element.minimumAge}</Table.Td>
       <Table.Td>
-        <Button onClick={() => navigate(`${element.id}`)}>Edit</Button>
+        <Flex direction={"row"} gap={10}>
+          <ActionIcon onClick={() => navigate(`${element.id}`)}>
+              <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+          </ActionIcon>
+          <ActionIcon onClick={() => openDeleteModal(element.id, element.title)} color="red">
+            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+          </ActionIcon>
+        </Flex>
       </Table.Td>
     </Table.Tr>
   ));
+
+  
 
 
   return (
