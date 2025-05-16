@@ -1,4 +1,7 @@
 import {useEffect} from "react";
+import { HeroContentLeft } from "../components/Hero/HeroContentLeft";
+import Movies from "../components/Movies/Movies";
+
 
 const Dashboard = () => {
 
@@ -10,7 +13,10 @@ const Dashboard = () => {
 
     }
 
-    return <>Dashboard Page</>
+    return <> 
+        <HeroContentLeft />
+        <Movies />
+    </>
 }
 
 export default Dashboard;

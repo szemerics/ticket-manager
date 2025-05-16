@@ -1,0 +1,59 @@
+.hero {
+  position: relative;
+  background-image: url(https://thelambertpost.com/wp-content/uploads/2025/04/image_2025-04-08_115858325-1200x600.png);
+  background-size: cover;
+  background-position: top;
+}
+
+.container {
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-bottom: calc(var(--mantine-spacing-xl) * 6);
+  z-index: 1;
+  position: relative;
+}
+
+.title {
+  color: var(--mantine-color-white);
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.description {
+  color: var(--mantine-color-white);
+  max-width: 600px;
+}
+
+.control {
+  margin-top: calc(var(--mantine-spacing-xl) * 1.5);
+}
+
+/* Responsive styles */
+@media (max-width: 48em) {
+  .container {
+    height: 500px;
+    padding-bottom: calc(var(--mantine-spacing-xl) * 3);
+  }
+  .title {
+    font-size: 40px;
+    line-height: 1.2;
+  }
+  .description {
+    max-width: 100%;
+    font-size: var(--mantine-font-size-sm);
+  }
+  .control {
+    width: 100%;
+  }
+}
+
+@media (max-width: 30em) {
+  .title {
+    font-size: 28px;
+    line-height: 1.3;
+  }
+}

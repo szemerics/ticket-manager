@@ -1,51 +1,39 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 import BasicLayout from "../components/Layout/BasicLayout.tsx";
-import useAuth from "../hooks/useAuth.tsx";
 import {routes} from "./Routes.tsx";
-import {ReactElement} from "react";
-
-const PrivateRoute = ({element}: {element: ReactElement}) => {
-    const { isLoggedIn } = useAuth();
-    return isLoggedIn ? element : <Navigate to="/login" />;
-};
-
-const AuthenticatedRedirect = ({element}: {element: ReactElement}) => {
-    const { isLoggedIn } = useAuth();
-    return isLoggedIn ? <Navigate to="/app" /> : element;
-};
 
 const Routing = () => {
+    const publicRoutes = routes.filter(route => !route.isPrivate);
+    const appRoutes = routes.filter(route => route.isPrivate);
 
     return <Routes>
         <Route
             path="/"
-            element={<AuthenticatedRedirect element={<Navigate to="login" />} />}
+            element={<Navigate to="/app/dashboard" replace />}
         />
-        {
-            routes.filter(route => !route.isPrivate).map(route => (
-                <Route
-                    key={route.path}
-                    path={route.path}
-                    element={<AuthenticatedRedirect element={route.component} />}
-                />
-            ))
-        }
+        {/* Public routes */}
+        {publicRoutes.map(route => (
+            <Route
+                key={route.path}
+                path={route.path}
+                element={route.component}
+            />
+        ))}
+        {/* App routes */}
         <Route
             path="app"
-            element={<PrivateRoute element={<BasicLayout />} />}>
+            element={<BasicLayout />}>
             <Route
                 path=""
                 element={<Navigate to="dashboard" />}
             />
-            {
-                routes.filter(route => route.isPrivate).map(route => (
-                    <Route
-                        key={route.path}
-                        path={route.path}
-                        element={<PrivateRoute element={route.component} />}
-                    />
-                ))
-            }
+            {appRoutes.map(route => (
+                <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.component}
+                />
+            ))}
         </Route>
     </Routes>
 }

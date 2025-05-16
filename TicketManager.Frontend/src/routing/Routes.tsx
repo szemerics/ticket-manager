@@ -1,8 +1,9 @@
 import Login from "../pages/Login.tsx";
 import ForgotPassword from "../pages/ForgotPassword.tsx";
 import Dashboard from "../pages/Dashboard.tsx";
-import Movies from "../pages/Movies.tsx";
+// import Movies from "../pages/MoviesAdmin.tsx";
 import MovieForm from "../pages/MovieForm.tsx";
+import Profile from "../pages/Profile.tsx";
 export const routes = [
     {
         path: "login",
@@ -20,10 +21,15 @@ export const routes = [
         isPrivate: true
     },
     {
-      path: "movies",
-      component: <Movies/>,
+      path : "profile",
+      component: <Profile/>,
       isPrivate: true
     },
+    // {
+    //   path: "movies",
+    //   component: <Movies/>,
+    //   isPrivate: true
+    // },
     {
       path: "movies/create",
       component: <MovieForm isCreate={true}/>,

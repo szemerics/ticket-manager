@@ -1,38 +1,33 @@
-import {AppShell} from "@mantine/core";
-import {useDisclosure} from "@mantine/hooks";
-import Header from "./Header.tsx";
-import {NavbarMinimal} from "./NavbarMinimal.tsx";
-import {Outlet} from "react-router-dom";
+import { useDisclosure } from '@mantine/hooks';
+import classes from './MobileNavbar.module.css';
+import { AppShell, UnstyledButton } from '@mantine/core';
+import { Outlet } from "react-router-dom";
+import { HeaderSearch } from './HeaderSearch';
 
-const BasicLayout = () => {
-    const [opened, {toggle}] = useDisclosure();
+export function BasicLayout() {
+  const [opened, { toggle }] = useDisclosure();
 
-    return <>
-        <AppShell
-            header={{height: 80}}
-            navbar={{
-                width: 250,
-                breakpoint: "sm",
-                collapsed: {mobile: !opened},
-            }}
-            padding="md"
-            style={{background: '#f9f9f9'}}
-        >
+  return (
+    <AppShell
+      header={{ height: 72 }}
+      navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
+    >
+      <AppShell.Header>
+        <HeaderSearch opened={opened} toggle={toggle} />
+      </AppShell.Header>
 
-            <AppShell.Header
-                style={{boxShadow: '0px 5px 10px 0px rgba(82, 63, 105, 0.05)', border: '1px solid #f1f1f1'}}>
-                <Header opened={opened} toggle={toggle}></Header>
-            </AppShell.Header>
+      <AppShell.Navbar py="md" px={4}>
+        <UnstyledButton className={classes.control}>Home</UnstyledButton>
+        <UnstyledButton className={classes.control}>Blog</UnstyledButton>
+        <UnstyledButton className={classes.control}>Contacts</UnstyledButton>
+        <UnstyledButton className={classes.control}>Support</UnstyledButton>
+      </AppShell.Navbar>
 
-            <AppShell.Navbar style={{border: 'none'}}>
-                <NavbarMinimal toggle={toggle}></NavbarMinimal>
-            </AppShell.Navbar>
-
-            <AppShell.Main style={{background: 'url("/bg.png") no-repeat center center fixed'}}>
-                <Outlet/>
-            </AppShell.Main>
-        </AppShell>
-    </>
+      <AppShell.Main>
+         <Outlet/>
+      </AppShell.Main>
+    </AppShell>
+  );
 }
 
 export default BasicLayout;
