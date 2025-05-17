@@ -36,7 +36,7 @@ const ProfileCard = () => {
 
   return (
     <>
-      <Paper radius="md" withBorder p="lg" bg="var(--mantine-color-body)" h={'fit-content'} miw={400} mx="auto">
+      <Paper radius="md" withBorder p="lg" bg="var(--mantine-color-body)" h={'fit-content'}  miw={{base: '100%', lg:400}} mx="auto">
         <Avatar
           src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png"
           size={120}
