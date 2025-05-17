@@ -12,6 +12,7 @@ namespace TicketManager.DataContext.Dtos
     {
         public int Id { get; set; }
         public int MovieId { get; set; }
+        public MovieDto Movie { get; set; }
         public DateTime ScreeningTime { get; set; }
         public decimal ScreeningPrice { get; set; }
         public int RoomId { get; set; }
