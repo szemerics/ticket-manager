@@ -19,7 +19,7 @@ import api from '../../api/api';
 import { IOrder } from '../../interfaces/IOrder';
 
 interface RowData {
-  purchaseDate: Date;
+  purchaseDate: string;
   movieTitle: string;
   ticketsQuantity: number;
   totalPrice: number;
@@ -70,8 +70,8 @@ function sortData(
   return filterData(
     [...data].sort((a, b) => {
       if (sortBy === 'purchaseDate') {
-        const dateA = new Date(a[sortBy]).getTime();
-        const dateB = new Date(b[sortBy]).getTime();
+        const dateA = new Date(a[sortBy].split(',')[0]).getTime();
+        const dateB = new Date(b[sortBy].split(',')[0]).getTime();
         return payload.reversed ? dateB - dateA : dateA - dateB;
       }
       
@@ -89,51 +89,54 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    purchaseDate: '2025-01-01',
-    movieTitle: 'The Matrix',
-    ticketsQuantity: 2,
-    totalPrice: 20,
-  },
-  {
-    purchaseDate: '2025-01-02',
-    movieTitle: 'Inception',
-    ticketsQuantity: 2,
-    totalPrice: 15,
-  },
-  {
-    purchaseDate: '2025-01-03',
-    movieTitle: 'The Dark Knight',
-    ticketsQuantity: 3,
-    totalPrice: 30,
-  },
-  {
-    purchaseDate: '2025-01-04',
-    movieTitle: 'Shrek',
-    ticketsQuantity: 1,
-    totalPrice: 45,
-  }
-];
-
 export function Orders() {
   const [search, setSearch] = useState('');
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState<RowData[]>([]);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [orders, setOrders] = useState<IOrder[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.Orders.getOrders().then(res => {
+      const formattedOrders: RowData[] = res.data.map((order: IOrder) => ({
+        purchaseDate: new Date(order.purchaseDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        movieTitle: order.movieTitle,
+        ticketsQuantity: order.tickets.length,
+        totalPrice: order.totalPrice
+      }));
+      setOrders(res.data);
+      setSortedData(formattedOrders);
+      setLoading(false);
+    });
+  }, []);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
+    setSortedData(sortData(sortedData, { sortBy: field, reversed, search }));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
-    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+    setSortedData(sortData(sortedData, { sortBy, reversed: reverseSortDirection, search: value }));
   };
+
+  if(loading) {
+    return (
+      <Center>
+        <Loader size="lg" />
+      </Center>
+    );
+  }
 
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.purchaseDate}>
@@ -149,29 +152,10 @@ export function Orders() {
     </Table.Tr>
   ));
 
-  const [orders, setOrders] = useState<IOrder[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api.Orders.getOrders().then(res => {
-      setOrders(res.data);
-      setLoading(false);
-    })
-    
-  }, [])
-
-  if(loading) {
-     return (
-      <Center>
-        <Loader size="lg" />
-      </Center>
-    );
-  }
-
   return (
     <ScrollArea>
       <TextInput
-        placeholder="Search by any field"
+        placeholder="Search by Movie Title"
         mb="md"
         leftSection={<IconSearch size={16} stroke={1.5} />}
         value={search}
@@ -214,7 +198,7 @@ export function Orders() {
             rows
           ) : (
             <Table.Tr>
-              <Table.Td colSpan={Object.keys(data[0]).length}>
+              <Table.Td colSpan={Object.keys(sortedData[0]).length}>
                 <Text fw={500} ta="center">
                   Nothing found
                 </Text>

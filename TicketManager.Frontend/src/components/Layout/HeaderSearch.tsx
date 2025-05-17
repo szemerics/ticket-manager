@@ -4,10 +4,32 @@ import { Link, useNavigate } from 'react-router-dom';
 import MicketsLogo from '/ticketManagerLogoNoShadow.png';
 import classes from './HeaderSearch.module.css';
 import useAuth from '../../hooks/useAuth';
+import { useEffect, useState } from 'react';
+import api from '../../api/api';
+import { IMovie } from '../../interfaces/IMovie';
 
 export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => void}) {
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
+  const [movies, setMovies] = useState<IMovie[]>([]);
+
+  useEffect(() => {
+    api.Movies.getMovies()
+      .then(response => {
+        setMovies(response.data);
+      })
+      .catch(error => {
+        console.error('Failed to fetch movies:', error);
+      });
+  }, []);
+
+  const handleMovieSelect = (movieTitle: string) => {
+    const selectedMovie = movies.find(movie => movie.title === movieTitle);
+    if (selectedMovie) {
+      navigate(`/app/movies/${selectedMovie.id}`);
+      
+    }
+  };
 
   const scrollToMovies = () => {
     const moviesSection = document.querySelector('.mantine-Grid-root');
@@ -29,7 +51,7 @@ export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => v
   };
 
   const links = [
-    { link: isLoggedIn ? '/app/profile' : '/login', label: isLoggedIn ? 'Profile' : 'Login' },
+    { link: isLoggedIn ? '/app/profile' : '/app/login', label: isLoggedIn ? 'Profile' : 'Login' },
     { link: '/app/dashboard', label: 'Movies', onClick: handleMoviesClick },
   ];
 
@@ -55,8 +77,6 @@ export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => v
               <Text fw={500}>Mickets</Text>
             </Flex>
           </Link>
-         
-          
         </Group>
 
         <Group>
@@ -65,9 +85,10 @@ export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => v
           </Group>
           <Autocomplete
             className={classes.search}
-            placeholder="Search"
+            placeholder="Search movies..."
             leftSection={<IconSearch size={16} stroke={1.5} />}
-            data={['React', 'Angular', 'Vue', 'Next.js', 'Riot.js', 'Svelte', 'Blitz.js']}
+            data={movies.map(movie => movie.title)}
+            onChange={handleMovieSelect}
             visibleFrom="xs"
           />
         </Group>

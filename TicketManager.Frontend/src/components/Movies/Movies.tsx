@@ -14,12 +14,10 @@ const Movies = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    // Fetch movies
     api.Movies.getMovies().then(res => {
       setMovies(res.data);
     });
 
-    // Fetch categories
     api.Movies.getCategories().then(res => {
       setCategories(res.data);
     });
@@ -39,11 +37,12 @@ const Movies = () => {
 
       <Grid gutter="md" px="xl">
         {movies.map((movie) => (
-          <Grid.Col key={movie.id} span={{ base: 6, sm: 4, md: 4, lg: 3 }}>
-            <MovieCard 
+          <Grid.Col key={movie.id} span={{ base: 12, sm: 4, md: 4, lg: 3 }}>
+            <MovieCard
+              id={movie.id}
               title={movie.title} 
               categories={getCategoryNames(movie.categories)} 
-              desciription={movie.description}
+              year={movie.year}
             />
           </Grid.Col>
         ))}

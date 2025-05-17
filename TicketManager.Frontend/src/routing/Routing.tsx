@@ -1,6 +1,7 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 import BasicLayout from "../components/Layout/BasicLayout.tsx";
 import {routes} from "./Routes.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
 
 const Routing = () => {
     const publicRoutes = routes.filter(route => !route.isPrivate);
@@ -11,14 +12,6 @@ const Routing = () => {
             path="/"
             element={<Navigate to="/app/dashboard" replace />}
         />
-        {/* Public routes */}
-        {publicRoutes.map(route => (
-            <Route
-                key={route.path}
-                path={route.path}
-                element={route.component}
-            />
-        ))}
         {/* App routes */}
         <Route
             path="app"
@@ -28,6 +21,17 @@ const Routing = () => {
                 element={<Navigate to="dashboard" />}
             />
             {appRoutes.map(route => (
+                <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                        <ProtectedRoute>
+                            {route.component}
+                        </ProtectedRoute>
+                    }
+                />
+            ))}
+            {publicRoutes.map(route => (
                 <Route
                     key={route.path}
                     path={route.path}
