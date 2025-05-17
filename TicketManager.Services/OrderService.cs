@@ -268,6 +268,8 @@ namespace TicketManager.Services
         {
             var orders = await _context.Orders
                 .Include(o => o.User)
+                .Include(o => o.Screening)
+                .ThenInclude(s => s.Movie)
                 .Include(o => o.Tickets)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<OrderDto>>(orders);
@@ -277,6 +279,8 @@ namespace TicketManager.Services
         {
             var order = await _context.Orders
                 .Include(o => o.User)
+                .Include(o => o.Screening)
+                .ThenInclude(s => s.Movie)
                 .Include(o => o.Tickets)
                 .ThenInclude(t => t.Seat)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
@@ -291,6 +295,8 @@ namespace TicketManager.Services
         {
             var orders = await _context.Orders
                 .Include(o => o.User)
+                .Include(o => o.Screening)
+                .ThenInclude(s => s.Movie)
                 .Include(o => o.Tickets)
                 .ThenInclude(t => t.Seat)
                 .Where(o => o.UserId == userId)

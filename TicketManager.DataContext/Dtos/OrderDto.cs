@@ -13,6 +13,7 @@ namespace TicketManager.DataContext.Dtos
         public DateTime PurchaseDate { get; set; }
         public decimal TotalPrice { get; set; }
         public int ScreeningId { get; set; }
+        public ScreeningDto Screening { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
 
