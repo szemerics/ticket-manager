@@ -1,6 +1,6 @@
 import { Badge, Button, Flex, Group, Paper, Text, Title } from '@mantine/core';
 import classes from './MovieCard.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface MovieCardProps {
   id: number;
@@ -11,6 +11,13 @@ interface MovieCardProps {
 }
 
 export function MovieCard({ id, title, categories, year, posterUrl }: MovieCardProps) {
+  const navigate = useNavigate();
+
+  const handleBookNow = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate(`/app/movies/${id}`);
+  };
+
   return (
     <Paper 
       shadow="md" 
@@ -40,7 +47,7 @@ export function MovieCard({ id, title, categories, year, posterUrl }: MovieCardP
         </Flex>
       
       </Flex>
-      <Button variant="blue" color="dark" component={Link} to={`/app/movies/${id}`}>
+      <Button variant="blue" color="dark" onClick={handleBookNow}>
         Book Now
       </Button>
     </Paper>

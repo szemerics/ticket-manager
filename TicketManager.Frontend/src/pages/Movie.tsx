@@ -26,11 +26,10 @@ const Movie = () => {
       setCategories(res.data);
     });
 
-      api.Movies.getMovies().then(res => {
+    api.Movies.getMovies().then(res => {
       setMovies(res.data);
     });
-
-  }, [])
+  }, [id])
 
   const getCategoryNames = (categoryIds: number[]) => {
     return categoryIds.map(id => 
@@ -92,19 +91,21 @@ const Movie = () => {
         withIndicators
         height={600}
         type="container"
-        slideSize={{ base: '100%', '300px': '50%', '500px': '33.333333%' }}
-        slideGap={{ base: 0, '300px': 'md', '500px': 'lg' }}
+        slideSize={{ base: '100%', '300px': '45%', '350px': '10%' }}
+        slideGap={{ base: 0, '300px': 'xs', '500px': 'xs' }}
         emblaOptions={{ loop: true, align: 'start' }} >
         
         {movies.map((movie) => (
           <Carousel.Slide key={movie.id}>
-            <MovieCard
-              id={movie.id}
-              title={movie.title} 
-              categories={getCategoryNames(movie.categories)} 
-              year={movie.year}
-              posterUrl={movie.posterUrl}
-            />
+           <div style={{ width: '350px', height: '600px'}}>
+              <MovieCard
+                id={movie.id}
+                title={movie.title} 
+                categories={getCategoryNames(movie.categories)} 
+                year={movie.year}
+                posterUrl={movie.posterUrl}
+              />
+            </div>
           </Carousel.Slide>
         ))}
         
