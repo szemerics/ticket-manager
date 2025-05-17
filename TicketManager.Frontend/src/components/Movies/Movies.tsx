@@ -43,6 +43,7 @@ const Movies = () => {
               title={movie.title} 
               categories={getCategoryNames(movie.categories)} 
               year={movie.year}
+              posterUrl={movie.posterUrl}
             />
           </Grid.Col>
         ))}

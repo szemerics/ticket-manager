@@ -7,11 +7,18 @@ interface MovieCardProps {
   title: string;
   categories: string[];
   year: number;
+  posterUrl: string;
 }
 
-export function MovieCard({ id, title, categories, year }: MovieCardProps) {
+export function MovieCard({ id, title, categories, year, posterUrl }: MovieCardProps) {
   return (
-    <Paper shadow="md" p="xl" radius="md" className={classes.card}>
+    <Paper 
+      shadow="md" 
+      p="xl" 
+      radius="md" 
+      className={classes.card}
+      style={{ backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)), url(${posterUrl})` }}
+    >
       <Flex direction={'column'} justify={'end'} style={{ height: '100%' }}>
         <Flex direction={'column'} align={'start'} gap={5} mb={'md'}>
 

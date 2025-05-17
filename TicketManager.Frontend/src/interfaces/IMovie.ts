@@ -5,6 +5,7 @@ export interface IMovie {
   description: string;
   lengthInMinutes: number;
   minimumAge: number;
+  posterUrl: string;
   categories: number[];
   screenings: {
     screeningTime: string;
