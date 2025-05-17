@@ -15,6 +15,7 @@ namespace TicketManager.DataContext.Dtos
         public string Description { get; set; }
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+        public string PosterUrl { get; set; }
 
         // enum ints for categories
         public List<MovieCategory> Categories { get; set; }
@@ -30,6 +31,7 @@ namespace TicketManager.DataContext.Dtos
         
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+        public string PosterUrl { get; set; }
 
         // enum ints for categories
         public List<MovieCategory> Categories { get; set; }
@@ -43,6 +45,7 @@ namespace TicketManager.DataContext.Dtos
         public string Description { get; set; }
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+        public string PosterUrl { get; set; }
 
         // enum ints for categories
         public List<MovieCategory> Categories { get; set; }

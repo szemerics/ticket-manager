@@ -41,6 +41,7 @@ namespace TicketManager.DataContext.Entities
         public string Description { get; set; }
         public int LengthInMinutes { get; set; }
         public int MinimumAge { get; set; }
+        public string PosterUrl { get; set; }
 
         public List<MovieCategory> Categories { get; set; }
         public List<Screening> Screenings { get; set; }
