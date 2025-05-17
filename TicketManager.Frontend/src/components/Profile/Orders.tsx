@@ -52,6 +52,8 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
+  if (!query) return data;
+  
   return data.filter((item) =>
     keys(data[0]).some((key) => item[key].toString().toLowerCase().includes(query))
   );
@@ -92,6 +94,7 @@ function sortData(
 export function Orders() {
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState<RowData[]>([]);
+  const [originalData, setOriginalData] = useState<RowData[]>([]);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -107,11 +110,12 @@ export function Orders() {
           hour: '2-digit',
           minute: '2-digit'
         }),
-        movieTitle: order.movieTitle,
+        movieTitle: order.screening.movie.title,
         ticketsQuantity: order.tickets.length,
         totalPrice: order.totalPrice
       }));
       setOrders(res.data);
+      setOriginalData(formattedOrders);
       setSortedData(formattedOrders);
       setLoading(false);
     });
@@ -121,13 +125,13 @@ export function Orders() {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(sortedData, { sortBy: field, reversed, search }));
+    setSortedData(sortData(originalData, { sortBy: field, reversed, search }));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
-    setSortedData(sortData(sortedData, { sortBy, reversed: reverseSortDirection, search: value }));
+    setSortedData(sortData(originalData, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
   if(loading) {
@@ -198,7 +202,7 @@ export function Orders() {
             rows
           ) : (
             <Table.Tr>
-              <Table.Td colSpan={Object.keys(sortedData[0]).length}>
+              <Table.Td colSpan={5}>
                 <Text fw={500} ta="center">
                   Nothing found
                 </Text>

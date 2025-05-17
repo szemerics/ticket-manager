@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
+import '@mantine/carousel/styles.css';
 import { useState } from 'react'
 import {emailKeyName, roleKeyName, tokenKeyName} from "./constants/constants.ts";
 import { MantineProvider } from '@mantine/core';

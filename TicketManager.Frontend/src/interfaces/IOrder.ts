@@ -2,7 +2,13 @@ export interface IOrder {
   id: number;
   purchaseDate: string;
   totalPrice: number;
-  screeningId: number;
+  screening: {
+    id: number,
+    movie: {
+      id: number,
+      title: string;
+    }
+  }
   email: string;
   phone: string;
   tickets: {
