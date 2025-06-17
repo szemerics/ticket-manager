@@ -87,7 +87,7 @@ export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => v
             className={classes.search}
             placeholder="Search movies..."
             leftSection={<IconSearch size={16} stroke={1.5} />}
-            data={movies.map(movie => movie.title)}
+            data={Array.isArray(movies) ? movies.map(movie => movie.title) : []}
             onChange={handleMovieSelect}
             visibleFrom="xs"
           />
