@@ -1,7 +1,6 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
 import { IMovie } from "../interfaces/IMovie";
 import { IProfile } from "../interfaces/IProfile";
-import Profile from "../pages/Profile";
 import axionsInstance from "./axios.config";
 
 const Movies = {
@@ -13,8 +12,9 @@ const Movies = {
   deleteMovie: (id: string) => axionsInstance.delete(`/Movie/DeleteMovie/${id}`)
 }
 
-const Profiles = {
-  getProfile: () => axionsInstance.get<IProfile>('/User/GetProfile')
+const Users = {
+  getProfile: () => axionsInstance.get<IProfile>('/User/GetProfile'),
+  
 }
 
 const Orders = {
@@ -29,7 +29,7 @@ const Auth = {
 const api = {
   Movies,
   Auth,
-  Profiles,
+  Users,
   Orders
 }
 

@@ -18,6 +18,14 @@ namespace TicketManager.Controller
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrdersAsync();
+            return Ok(orders);
+        }
+
+        [HttpGet]
         [Authorize(Roles = "Cashier")]
         public async Task<IActionResult> GetOrdersByUserId(int userId)
         {

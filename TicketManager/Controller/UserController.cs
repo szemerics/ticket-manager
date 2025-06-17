@@ -59,6 +59,14 @@ namespace TicketManager.Controller
             return Ok(user);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userService.GetUsersAsync();
+            return Ok(users);
+        }
+
         [HttpPut]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateDto dto)

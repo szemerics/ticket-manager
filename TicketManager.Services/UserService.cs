@@ -18,6 +18,7 @@ namespace TicketManager.Services
     {
 
         // Admin functions
+        Task<IEnumerable<UserDto>> GetUsersAsync();
         Task<UserDto> GetUserByIdAsync(int userId);
         Task<bool> DeleteUserAsync(int userId);
         Task<UserDto> UpdateUserAsync(int userId, UserUpdateDto dto);
@@ -167,6 +168,14 @@ namespace TicketManager.Services
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public Task<IEnumerable<UserDto>> GetUsersAsync()
+        {
+            return Task.FromResult(_context.Users
+                .Include(u => u.Roles)
+                .Select(u => _mapper.Map<UserDto>(u))
+                .AsEnumerable());
         }
     }
 }

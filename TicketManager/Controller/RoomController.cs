@@ -18,6 +18,13 @@ namespace TicketManager.Controller
             _roomService = roomService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllRooms()
+        {
+            var rooms = await _roomService.GetRoomsAsync();
+            return Ok(rooms);
+        }
 
         [HttpGet("{roomId}")]
         public async Task<IActionResult> GetRoomById(int roomId)
