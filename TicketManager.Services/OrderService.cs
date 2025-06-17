@@ -271,6 +271,7 @@ namespace TicketManager.Services
                 .Include(o => o.Screening)
                 .ThenInclude(s => s.Movie)
                 .Include(o => o.Tickets)
+                .ThenInclude(t => t.Seat)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<OrderDto>>(orders);
         }

@@ -12,8 +12,9 @@ const Movies = {
   deleteMovie: (id: string) => axionsInstance.delete(`/Movie/DeleteMovie/${id}`)
 }
 
-const Profiles = {
-  getProfile: () => axionsInstance.get<IProfile>('/User/GetProfile')
+const Users = {
+  getProfile: () => axionsInstance.get<IProfile>('/User/GetProfile'),
+  
 }
 
 const Orders = {
@@ -28,7 +29,7 @@ const Auth = {
 const api = {
   Movies,
   Auth,
-  Profiles,
+  Users,
   Orders
 }
 
