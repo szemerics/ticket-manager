@@ -1,10 +1,28 @@
 import { useDisclosure } from '@mantine/hooks';
 import classes from './MobileNavbar.module.css';
 import { AppShell, UnstyledButton } from '@mantine/core';
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { HeaderSearch } from './HeaderSearch';
+import { useEffect } from 'react';
 
 export function BasicLayout() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const roles = localStorage.getItem('roles');
+    const roleList = roles ? roles.split(',') : [];
+    const highestRole = roleList[0];   
+
+    if (highestRole === 'Admin') {
+      navigate('/admin/dashboard');
+    } else if (highestRole === 'Cashier') {
+      navigate('/cashier');
+    }
+
+
+  }, [])
+  
+
   const [opened, { toggle }] = useDisclosure();
 
   return (

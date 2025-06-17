@@ -13,7 +13,7 @@ const ProfileCard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/app/dashboard");
+    navigate("/app/home");
   }
 
   useEffect(() => {

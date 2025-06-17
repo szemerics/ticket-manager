@@ -1,12 +1,12 @@
 import { IconSearch } from '@tabler/icons-react';
 import { Autocomplete, Burger, Flex, Group, Image, Text } from '@mantine/core';
 import { Link, useNavigate } from 'react-router-dom';
-import MicketsLogo from '/ticketManagerLogoNoShadow.png';
+import TicketsLogo from '/ticketManagerLogoNoShadow.png';
 import classes from './HeaderSearch.module.css';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../../hooks/useAuth';
 import { useEffect, useState } from 'react';
-import api from '../../api/api';
-import { IMovie } from '../../interfaces/IMovie';
+import api from '../../../api/api';
+import { IMovie } from '../../../interfaces/IMovie';
 
 export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => void}) {
   const { isLoggedIn, logout } = useAuth();
@@ -46,13 +46,13 @@ export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => v
   };
 
   const handleMoviesClick = () => {
-    navigate('/app/dashboard');
+    navigate('/app/home');
     setTimeout(scrollToMovies, 100);
   };
 
   const links = [
     { link: isLoggedIn ? '/app/profile' : '/app/login', label: isLoggedIn ? 'Profile' : 'Login' },
-    { link: '/app/dashboard', label: 'Movies', onClick: handleMoviesClick },
+    { link: '/app/home', label: 'Movies', onClick: handleMoviesClick },
   ];
 
   const items = links.map((link) => (
@@ -71,10 +71,10 @@ export function HeaderSearch({opened, toggle}: {opened: boolean, toggle: () => v
       <div className={classes.inner}>
         <Group>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
-          <Link to={'/app/dashboard'} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to={'/app/home'} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Flex gap={10} align="center">  
-              <Image src={MicketsLogo} alt="img" w={45}/>
-              <Text fw={500}>Mickets</Text>
+              <Image src={TicketsLogo} alt="img" w={45}/>
+              <Text fw={500}>Ticket Manager</Text>
             </Flex>
           </Link>
         </Group>

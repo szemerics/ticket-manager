@@ -1,8 +1,9 @@
 import Login from "../pages/Login.tsx";
 import ForgotPassword from "../pages/ForgotPassword.tsx";
-import Dashboard from "../pages/Dashboard.tsx";
+import Home from "../pages/Home.tsx";
 import Movie from "../pages/Movie.tsx";
 import Profile from "../pages/Profile.tsx";
+import AdminDashboard from "../pages/Admin/AdminDashboard.tsx";
 export const routes = [
     {
         path: "login",
@@ -15,13 +16,24 @@ export const routes = [
         isPrivate: false
     },
     {
-        path: "dashboard",
-        component: <Dashboard/>,
+        path: "home",
+      _component: <Home />,
+        get component() {
+          return this._component;
+        },
+        set component(value) {
+          this._component = value;
+        },
         isPrivate: false
     },
     {
       path : "profile",
       component: <Profile/>,
+      isPrivate: true
+    },
+    {
+      path : "admin/dashboard",
+      component: <AdminDashboard/>,
       isPrivate: true
     },
     // {

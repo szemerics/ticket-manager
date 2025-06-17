@@ -10,6 +10,7 @@ import {useForm} from "@mantine/form";
 import {useNavigate} from "react-router-dom";
 import AuthContainer from "../components/AuthContainer.tsx";
 import useAuth from "../hooks/useAuth.tsx";
+import { roleKeyName } from "../constants/constants.ts";
 
 const Login = () => {
     const {login} = useAuth();
@@ -30,8 +31,18 @@ const Login = () => {
 
     const submit = async () => {
         try {
-            await login(form.values.email, form.values.password);
-            navigate('/app/dashboard');
+            const userRoles = await login(form.values.email, form.values.password);
+            const roleList = Array.isArray(userRoles) ? userRoles : [userRoles];
+            const highestRole = roleList[0];            
+
+            if (highestRole === 'Admin') {
+                navigate('/admin/dashboard');
+            } else if (highestRole === 'Cashier') {
+                navigate('/app/cashier/dashboard');
+            } else {
+                navigate('/app/home');
+            }
+
         } catch (error) {
             console.error('Login failed:', error);
         }

@@ -14,19 +14,24 @@ const useAuth = () => {
     const navigate = useNavigate();
     const isLoggedIn = !!token;
 
-    const login = (email: string, password: string) => {
-        api.Auth.login(email, password).then(res => {
-            const tokenFromBE = res.data.token;
-            const decodedToken = jwtDecode<CustomJwtPayload>(tokenFromBE);
-            
-            const userRoles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    const login = (email: string, password: string): Promise<string | string[]> => {
+        return new Promise((resolve, reject) => {
+            api.Auth.login(email, password).then(res => {
+                const tokenFromBE = res.data.token;
+                const decodedToken = jwtDecode<CustomJwtPayload>(tokenFromBE);
+                
+                const userRoles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-            setRoles(userRoles); localStorage.setItem(roleKeyName, userRoles);
-            setToken(tokenFromBE); localStorage.setItem(tokenKeyName, tokenFromBE);
-            setEmail(email); localStorage.setItem(emailKeyName, email);
-        }, error => {
-            alert('Invalid credentials.')
-        })
+                setRoles(userRoles); localStorage.setItem(roleKeyName, userRoles);
+                setToken(tokenFromBE); localStorage.setItem(tokenKeyName, tokenFromBE);
+                setEmail(email); localStorage.setItem(emailKeyName, email);
+                
+                resolve(userRoles);
+            }, error => {
+                alert('Invalid credentials.');
+                reject(error);
+            });
+        });
     }
 
     const logout = () => {

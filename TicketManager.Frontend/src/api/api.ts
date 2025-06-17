@@ -21,7 +21,6 @@ const Orders = {
   getOrders: () => axionsInstance.get('/Order/GetMyOrders')
 }
 
-
 const Auth = {
   login: (email: string, password: string) => axionsInstance.post<{token: string}>('/User/Login', {email,password}),
   forgotPassword: (email: string) => axionsInstance.post('/User/ForgotPassword', {email})
