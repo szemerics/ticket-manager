@@ -12,35 +12,35 @@ import { Code, Group, Image } from '@mantine/core';
 import classes from './NavbarSimple.module.css';
 import useAuth from '../../../hooks/useAuth';
 import TicketsLogo from '/ticketManagerLogoNoShadow.png';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const data = [
-  { link: '', label: 'Dashboard', icon: IconHome },
-  { link: '', label: 'Movies', icon: IconMovie },
-  { link: '', label: 'Screenings', icon: IconVideo },
-  { link: '', label: 'Rooms', icon: IconSquareKey },
-  { link: '', label: 'Orders', icon: IconReceipt },
-  { link: '', label: 'Users', icon: IconUsers }
+  { link: '/admin/dashboard', label: 'Dashboard', icon: IconHome },
+  { link: '/admin/movies', label: 'Movies', icon: IconMovie },
+  { link: '/admin/screenings', label: 'Screenings', icon: IconVideo },
+  { link: '/admin/rooms', label: 'Rooms', icon: IconSquareKey },
+  { link: '/admin/orders', label: 'Orders', icon: IconReceipt },
+  { link: '/admin/users', label: 'Users', icon: IconUsers }
 ];
 
 export function NavbarSimple() {
-  const [active, setActive] = useState('Billing');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [active, setActive] = useState(location.pathname);
 
   const { logout } = useAuth();
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={classes.link}
-      data-active={item.label === active || undefined}
-      href={item.link}
+      data-active={item.link === active || undefined}
+      to={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
+      onClick={() => setActive(item.link)}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ));
 
   return (

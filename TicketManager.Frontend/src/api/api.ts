@@ -1,7 +1,6 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
 import { IMovie } from "../interfaces/IMovie";
 import { IProfile } from "../interfaces/IProfile";
-import Profile from "../pages/Profile";
 import axionsInstance from "./axios.config";
 
 const Movies = {
