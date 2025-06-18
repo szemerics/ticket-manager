@@ -1,8 +1,8 @@
-import { AdminUsersList } from "../../components/Admin/UserTable/AdminUsersList"
+// import { AdminUsersList } from "../../components/Admin/UserTable/AdminUsersList"
 
 const AdminUsers = () => {
   return (
-    <AdminUsersList />
+    <>Hello Wrld</>
   )
 }
 
