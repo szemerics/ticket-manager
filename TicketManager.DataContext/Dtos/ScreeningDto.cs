@@ -18,7 +18,6 @@ namespace TicketManager.DataContext.Dtos
         public int RoomId { get; set; }
 
         public List<SeatDto> Seats { get; set; }
-        //public List<Ticket> Tickets { get; set; }
     }
     public class  MovieScreeningDto
     {
