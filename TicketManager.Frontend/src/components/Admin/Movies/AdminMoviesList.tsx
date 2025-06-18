@@ -15,7 +15,6 @@ import {
   Badge,
   ActionIcon,
   Modal,
-  Input,
   Button,
   Flex,
   MultiSelect,
@@ -41,6 +40,8 @@ interface RowData {
   year: number;
   categories: number[];
 }
+
+// Table Settings from Mantine
 
 interface ThProps {
   children: React.ReactNode;
@@ -203,6 +204,8 @@ export function AdminMoviesList( { onRefreshRef }: AdminMoviesListProps) {
     (_, index) => (startYear + index).toString()
   ).reverse();
 
+
+  // Form for modal
   const form = useForm({
     initialValues: {
       posterUrl: '',
@@ -237,6 +240,7 @@ export function AdminMoviesList( { onRefreshRef }: AdminMoviesListProps) {
   }, [selectedMovie]);
 
 
+// Delete Modal
 const openDeleteModal = (id: number, title: string) => {
   modals.openConfirmModal({
     title: `Are you sure you want to delete "${title}"?`,
@@ -381,7 +385,6 @@ const openDeleteModal = (id: number, title: string) => {
           </form>
         )}
       </Modal>
-
 
 
       <ScrollArea>

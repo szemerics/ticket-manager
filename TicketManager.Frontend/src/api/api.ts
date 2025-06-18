@@ -1,6 +1,7 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
 import { IMovie } from "../interfaces/IMovie";
 import { IProfile } from "../interfaces/IProfile";
+import { IScreening } from "../interfaces/IScreening";
 import axionsInstance from "./axios.config";
 
 const Movies = {
@@ -17,6 +18,10 @@ const Users = {
   
 }
 
+const Screenings = {
+  getAllScreenings: () => axionsInstance.get<IScreening[]>('/Screening/GetAllScreenings')
+}
+
 const Orders = {
   getOrders: () => axionsInstance.get('/Order/GetMyOrders')
 }
@@ -30,6 +35,7 @@ const api = {
   Movies,
   Auth,
   Users,
+  Screenings,
   Orders
 }
 

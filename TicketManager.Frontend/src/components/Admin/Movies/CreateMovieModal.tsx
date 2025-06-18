@@ -11,9 +11,10 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconPlus } from '@tabler/icons-react';
-import api from '../../api/api';
+import api from '../../../api/api.ts';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 
 interface Category {
   id: number;
@@ -80,9 +81,22 @@ const CreateMovieModal = ({ onMovieCreated }: CreateMovieModalProps) => {
                 minimumAge: values.minimumAge,
                 categories: values.categoryIds.map(c => parseInt(c))
               }).then(() => {
-                close();
                 onMovieCreated?.();
-              })
+                close();
+                 notifications.show({
+                  title: 'Success',
+                  message: 'Movie was successfully updated',
+                  color: 'green',
+                  position: 'bottom-center'
+                });
+              }).catch(() => {
+                notifications.show({
+                  title: 'Error',
+                  message: 'Failed to update movie',
+                  color: 'red',
+                  position: 'bottom-center'
+                });
+              });
             })}
           >
             <Flex gap={'md'} direction={'column'}>

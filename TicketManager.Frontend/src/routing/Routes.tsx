@@ -5,6 +5,7 @@ import Movie from "../pages/Movie.tsx";
 import Profile from "../pages/Profile.tsx";
 import AdminDashboard from "../pages/Admin/AdminDashboard.tsx";
 import AdminMovies from "../pages/Admin/AdminMovies.tsx";
+import AdminScreenings from "../pages/Admin/AdminScreenings.tsx";
 export const routes = [
     {
         path: "login",
@@ -33,6 +34,11 @@ export const routes = [
       isPrivate: true
     },
     {
+      path: "movies/:id",
+      component: <Movie />,
+      isPrivate: false
+    },
+        {
       path : "admin/dashboard",
       component: <AdminDashboard/>,
       isPrivate: true
@@ -42,20 +48,9 @@ export const routes = [
       component: <AdminMovies/>,
       isPrivate: true
     },
-    // {
-    //   path: "movies",
-    //   component: <Movies/>,
-    //   isPrivate: true
-    // },
-    // {
-    //   path: "movies/create",
-    //   component: <MovieForm isCreate={true}/>,
-    //   isPrivate: true
-    // },
     {
-      path: "movies/:id",
-      component: <Movie />,
-      isPrivate: false
+      path : "admin/screenings",
+      component: <AdminScreenings/>,
+      isPrivate: true
     }
-
 ]

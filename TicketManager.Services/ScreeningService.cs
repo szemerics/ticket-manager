@@ -138,6 +138,7 @@ namespace TicketManager.Services
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
                 .Include(s => s.Tickets)
+                .Include(s => s.Seats)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<ScreeningDto>>(screenings);
         }

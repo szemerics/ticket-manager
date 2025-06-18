@@ -1,5 +1,5 @@
-import CreateMovieModal from "../../components/Admin/CreateMovieModal"
-import { AdminMoviesList } from "../../components/Admin/MovieTable/AdminMoviesList"
+import CreateMovieModal from "../../components/Admin/Movies/CreateMovieModal"
+import { AdminMoviesList } from "../../components/Admin/Movies/AdminMoviesList"
 import { useRef } from "react"
 
 const AdminMovies = () => {
