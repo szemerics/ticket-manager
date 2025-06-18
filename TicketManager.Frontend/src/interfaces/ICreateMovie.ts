@@ -1,4 +1,5 @@
 export interface ICreateMovie {
+  posterUrl: string;
   title: string;
   year: number;
   description: string;

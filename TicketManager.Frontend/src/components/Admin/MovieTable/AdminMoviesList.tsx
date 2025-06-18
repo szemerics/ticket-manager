@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconPencil } from '@tabler/icons-react';
+import React, { useEffect, useState } from 'react';
+import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconPencil, IconTrash } from '@tabler/icons-react';
 import {
   Center,
   Group,
@@ -19,12 +19,15 @@ import {
   Button,
   Flex,
   MultiSelect,
+  NumberInput,
 } from '@mantine/core';
 import classes from './AdminMoviesList.module.css';
 import { IMovie } from '../../../interfaces/IMovie';
 import api from '../../../api/api';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { modals } from '@mantine/modals';
 
 
 interface Category {
@@ -97,7 +100,11 @@ function sortData(
   );
 }
 
-export function AdminMoviesList() {
+interface AdminMoviesListProps {
+  onRefreshRef: React.RefObject<(() => void) | null>;
+}
+
+export function AdminMoviesList( { onRefreshRef }: AdminMoviesListProps) {
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState('');
@@ -108,7 +115,7 @@ export function AdminMoviesList() {
   const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
 
-  useEffect(() => {
+  const refreshMovies = () => {
     api.Movies.getMovies().then(res => {
       const formattedMovies: RowData[] = res.data.map((movie: IMovie) => ({
         posterUrl: movie.posterUrl,
@@ -120,11 +127,19 @@ export function AdminMoviesList() {
       setOriginalData(formattedMovies);
       setSortedData(formattedMovies);
     });
+  };
 
+  useEffect(() => {
+    refreshMovies();
     api.Movies.getCategories().then(res => {
       setCategories(res.data);
     });
   }, []);
+
+  useEffect(() => {
+    onRefreshRef.current = refreshMovies;
+  }, [onRefreshRef])
+  
 
   const getCategoryNames = (categoryIds: number[]) => {
     return categoryIds.map(id => 
@@ -160,12 +175,19 @@ export function AdminMoviesList() {
         </Group>
       </Table.Td>
       <Table.Td>
-        <ActionIcon>
-          <IconPencil onClick={() => {
-            setSelectedMovie(movies[index]);
-            open();
-          }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
-        </ActionIcon>
+        <Flex gap={10}>
+          <ActionIcon>
+            <IconPencil onClick={() => {
+              setSelectedMovie(movies[index]);
+              open();
+            }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+          </ActionIcon>
+          <ActionIcon color='red'>
+            <IconTrash onClick={() => {
+              openDeleteModal(movies[index].id, movies[index].title)
+            }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+          </ActionIcon>
+        </Flex>
       </Table.Td>
       
     </Table.Tr>
@@ -182,13 +204,22 @@ export function AdminMoviesList() {
   ).reverse();
 
   const form = useForm({
-  initialValues: {
-    posterUrl: '',
-    title: '',
-    description: '',
-    year: '',
-    categoryIds: [] as string[],
-  },
+    initialValues: {
+      posterUrl: '',
+      title: '',
+      description: '',
+      year: '',
+      categoryIds: [] as string[],
+      lengthInMinutes: 0,
+      minimumAge: 0
+    },
+    validate: {
+      title: (value) => (value.length < 2 ? 'Title must have at least 2 letters' : null),
+      description: (value) => (value.length < 10 ? 'Description must have at least 10 letters' : null),
+      categoryIds: (value) => (value.length === 0 ? 'At least one category must be selected' : null),
+      lengthInMinutes: (value) => (value < 1 ? 'Length in minutes must be greater than 0' : null),
+      minimumAge: (value) => (value < 0 ? 'Minimum age must be greater than or equal to 0' : null),
+    }
   });
 
   useEffect(() => {
@@ -199,10 +230,53 @@ export function AdminMoviesList() {
         description: selectedMovie.description,
         year: selectedMovie.year.toString(),
         categoryIds: selectedMovie.categories.map(c => c.toString()),
+        lengthInMinutes: selectedMovie.lengthInMinutes,
+        minimumAge: selectedMovie.minimumAge
       });
     }
   }, [selectedMovie]);
 
+
+const openDeleteModal = (id: number, title: string) => {
+  modals.openConfirmModal({
+    title: `Are you sure you want to delete "${title}"?`,
+    centered: true,
+    children: (
+      <Text size="sm">
+        This action cannot be undone.
+      </Text>
+    ),
+    labels: { confirm: 'Delete', cancel: "Cancel" },
+    confirmProps: { color: 'red' },
+    onCancel: () =>
+      notifications.show({
+        position: 'bottom-center',
+        title: 'Cancelled',
+        color: 'gray',
+        message: 'Movie deletion was cancelled.',
+      }),
+    onConfirm: async () => {
+      try {
+        await api.Movies.deleteMovie(String(id));
+        refreshMovies();
+        notifications.show({
+          position: 'bottom-center',
+          title: 'Deleted',
+          color: 'red',
+          message: 'Movie was successfully deleted.',
+        });
+      } catch (error) {
+        notifications.show({
+          position: 'bottom-center',
+          title: 'Error',
+          color: 'orange',
+          message: 'Failed to delete the movie.',
+        });
+        console.error('Delete error:', error);
+      }
+    },
+  });
+  };
 
 
   return (
@@ -216,9 +290,31 @@ export function AdminMoviesList() {
                 ...values,
                 year: Number(values.year),
               };
-              console.log('Saving movie:', updated);
-              // dispatch update here, or call API
-              close();
+              api.Movies.updateMovie(selectedMovie.id.toString(), {
+                posterUrl: values.posterUrl,
+                title: values.title,
+                year: Number(values.year),
+                description: values.description,
+                lengthInMinutes: values.lengthInMinutes,
+                minimumAge: values.minimumAge,
+                categories: values.categoryIds.map(c => parseInt(c))
+              }).then(() => {
+                refreshMovies();
+                close();
+                notifications.show({
+                  title: 'Success',
+                  message: 'Movie was successfully updated',
+                  color: 'green',
+                  position: 'bottom-center'
+                });
+              }).catch(() => {
+                notifications.show({
+                  title: 'Error',
+                  message: 'Failed to update movie',
+                  color: 'red',
+                  position: 'bottom-center'
+                });
+              });
             })}
           >
             <Flex gap={'md'} direction={'column'}>
@@ -248,6 +344,20 @@ export function AdminMoviesList() {
                 data={yearOptions}
                 searchable
                 {...form.getInputProps('year')}
+              />
+
+              <NumberInput
+                label="Length in Minutes"
+                placeholder="Input movie length"
+                min={0}
+                {...form.getInputProps('lengthInMinutes')}
+              />
+
+              <NumberInput
+                label="Minimum Age"
+                placeholder="Input minimum age"
+                min={0}
+                {...form.getInputProps('minimumAge')}
               />
 
               <MultiSelect
@@ -304,6 +414,9 @@ export function AdminMoviesList() {
               </Th>
               <Table.Th>
                 Categories
+              </Table.Th>
+              <Table.Th>
+                Actions
               </Table.Th>
             </Table.Tr>
           </Table.Tbody>
