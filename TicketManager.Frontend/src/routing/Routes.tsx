@@ -5,6 +5,8 @@ import Movie from "../pages/Movie.tsx";
 import Profile from "../pages/Profile.tsx";
 import AdminDashboard from "../pages/Admin/AdminDashboard.tsx";
 import AdminMovies from "../pages/Admin/AdminMovies.tsx";
+import { Component } from "react";
+import AdminUsers from "../pages/Admin/AdminUsers.tsx";
 export const routes = [
     {
         path: "login",
@@ -40,6 +42,11 @@ export const routes = [
     {
       path : "admin/movies",
       component: <AdminMovies/>,
+      isPrivate: true
+    },
+    {
+      path : "admin/users",
+      component : <AdminUsers/>,
       isPrivate: true
     },
     // {

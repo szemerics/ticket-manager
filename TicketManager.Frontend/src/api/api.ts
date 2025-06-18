@@ -14,11 +14,19 @@ const Movies = {
 
 const Users = {
   getProfile: () => axionsInstance.get<IProfile>('/User/GetProfile'),
-  
+  getAllUsers: () => axionsInstance.get<IProfile[]>('/User/GetAllUsers'),
+  getUserById: (id: string) => axionsInstance.get<IProfile>(`/User/GetUserById/${id}`),
+  updateProfile: (obj: IProfile) => axionsInstance.put('/User/UpdateProfile', obj),
+  deleteUser: (id: string) => axionsInstance.delete(`/User/DeleteUser/${id}`),
+
 }
 
 const Orders = {
-  getOrders: () => axionsInstance.get('/Order/GetMyOrders')
+  getAllOrders: () => axionsInstance.get('/Order/GetAllOrders'),
+  getOrderById: (id: string) => axionsInstance.get(`/Order/GetOrderById/${id}`),
+  getOrderByUserId: (userId: string) => axionsInstance.get(`/Order/GetOrderByUserId/${userId}`),
+  getOrders: () => axionsInstance.get('/Order/GetMyOrders'),
+  deleteOrder: (id: string) => axionsInstance.delete(`/Order/DeleteOrder/${id}`),
 }
 
 const Auth = {
