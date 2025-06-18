@@ -9,15 +9,23 @@ import {
   Table,
   Text,
   TextInput,
+  Textarea,
+  Select,
   UnstyledButton,
   Badge,
   ActionIcon,
   Modal,
+  Input,
+  Button,
+  Flex,
+  MultiSelect,
 } from '@mantine/core';
 import classes from './AdminMoviesList.module.css';
 import { IMovie } from '../../../interfaces/IMovie';
 import api from '../../../api/api';
 import { useDisclosure } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
+
 
 interface Category {
   id: number;
@@ -97,7 +105,7 @@ export function AdminMoviesList() {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [originalData, setOriginalData] = useState<RowData[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<IMovie | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
@@ -154,7 +162,7 @@ export function AdminMoviesList() {
       <Table.Td>
         <ActionIcon>
           <IconPencil onClick={() => {
-            setSelectedOrder(movies[index]);
+            setSelectedMovie(movies[index]);
             open();
           }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
         </ActionIcon>
@@ -163,15 +171,107 @@ export function AdminMoviesList() {
     </Table.Tr>
   ));
 
+
+  // Year data for Select component
+  const currentYear = new Date().getFullYear();
+  const startYear = 1950;
+
+  const yearOptions = Array.from(
+    { length: currentYear - startYear + 1 },
+    (_, index) => (startYear + index).toString()
+  ).reverse();
+
+  const form = useForm({
+  initialValues: {
+    posterUrl: '',
+    title: '',
+    description: '',
+    year: '',
+    categoryIds: [] as string[],
+  },
+  });
+
+  useEffect(() => {
+    if (selectedMovie) {
+      form.setValues({
+        posterUrl: selectedMovie.posterUrl,
+        title: selectedMovie.title,
+        description: selectedMovie.description,
+        year: selectedMovie.year.toString(),
+        categoryIds: selectedMovie.categories.map(c => c.toString()),
+      });
+    }
+  }, [selectedMovie]);
+
+
+
   return (
     <>
       <Modal opened={opened} onClose={close} title="Editing Movie" size="lg">
-              {selectedOrder && (
-                <div>
-                  <Text size="lg" w={500}>{selectedOrder.title}</Text>
-                </div>
-              )}
-            </Modal>
+        {selectedMovie && (
+          <form
+            onSubmit={form.onSubmit((values) => {
+              const updated = {
+                ...selectedMovie,
+                ...values,
+                year: Number(values.year),
+              };
+              console.log('Saving movie:', updated);
+              // dispatch update here, or call API
+              close();
+            })}
+          >
+            <Flex gap={'md'} direction={'column'}>
+              <TextInput
+                label="Poster URL"
+                placeholder="Input movie poster URL"
+                {...form.getInputProps('posterUrl')}
+                inputWrapperOrder={['label', 'error', 'input']}
+              />
+
+              <TextInput
+                label="Title"
+                placeholder="Input movie title"
+                {...form.getInputProps('title')}
+                inputWrapperOrder={['label', 'error', 'input']}
+              />
+
+              <Textarea
+                label="Description"
+                placeholder="Input movie description"
+                {...form.getInputProps('description')}
+              />
+
+              <Select
+                label="Year"
+                placeholder="Pick movie year"
+                data={yearOptions}
+                searchable
+                {...form.getInputProps('year')}
+              />
+
+              <MultiSelect
+                label="Movie Categories"
+                placeholder="Pick multiple categories"
+                data={categories.map(c => ({
+                  label: c.name,
+                  value: c.id.toString()
+                }))}
+                searchable
+                key= {form.key('categoryIds')}
+                {...form.getInputProps('categoryIds')}
+              />
+            </Flex>
+           
+
+            <Group justify="flex-end" mt="md">
+              <Button variant="default" onClick={close}>Cancel</Button>
+              <Button type="submit">Save</Button>
+            </Group>
+          </form>
+        )}
+      </Modal>
+
 
 
       <ScrollArea>
