@@ -165,7 +165,20 @@ namespace TicketManager.Services
             if (user == null)
                 return false;
 
-            _context.Users.Remove(user);
+            var orders = await _context.Orders
+                .Where(o => o.UserId == user.Id)
+                .ToListAsync();
+            if (orders.Any())
+            {
+                user.IsDeleted = true;
+                _context.Users.Update(user);
+                //throw new InvalidOperationException("Cannot delete a user that has order.");
+            }
+            else
+            {
+                _context.Users.Remove(user);
+            }
+            
             await _context.SaveChangesAsync();
             return true;
         }
@@ -173,6 +186,7 @@ namespace TicketManager.Services
         public Task<IEnumerable<UserDto>> GetUsersAsync()
         {
             return Task.FromResult(_context.Users
+                .Where(u => u.IsDeleted == false)
                 .Include(u => u.Roles)
                 .Select(u => _mapper.Map<UserDto>(u))
                 .AsEnumerable());

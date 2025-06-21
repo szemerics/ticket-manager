@@ -78,11 +78,10 @@ namespace TicketManager.Controller
             return Ok(updatedUser);
         }
 
-        [HttpDelete]
+        [HttpDelete("{userId}")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteUser(int userId)
         {
-            var userId = int.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
             var result = await _userService.DeleteUserAsync(userId);
             if (!result)
                 return NotFound();
