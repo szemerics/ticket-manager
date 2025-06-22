@@ -9,6 +9,7 @@ import { Component } from "react";
 import AdminUsers from "../pages/Admin/AdminUsers.tsx";
 import AdminScreenings from "../pages/Admin/AdminScreenings.tsx";
 import AdminRooms from "../pages/Admin/AdminRooms.tsx";
+import AdminOrders from "../pages/Admin/AdminOrders.tsx";
 export const routes = [
     {
         path: "login",
@@ -64,6 +65,11 @@ export const routes = [
     {
       path : "admin/rooms",
       component: <AdminRooms/>,
+      isPrivate: true
+    },
+    {
+      path : "admin/orders",
+      component: <AdminOrders/>,
       isPrivate: true
     }
 ]
