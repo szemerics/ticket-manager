@@ -19,7 +19,7 @@ namespace TicketManager.Controller
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllScreenings()
         {
             var screenings = await _screeningService.GetScreeningsAsync();

@@ -5,6 +5,7 @@ import { IMovie } from "../interfaces/IMovie";
 import { IProfile } from "../interfaces/IProfile";
 import { IRoom } from "../interfaces/IRoom";
 import { IScreening } from "../interfaces/IScreening";
+import { ISetting } from "../interfaces/ISetting";
 import axionsInstance from "./axios.config";
 
 const Movies = {
@@ -28,7 +29,8 @@ const Screenings = {
   getAllScreenings: () => axionsInstance.get<IScreening[]>('/Screening/GetAllScreenings'),
   deleteScreening: (id: string) => axionsInstance.delete(`/Screening/DeleteScreening/${id}`),
   updateScreening: (id: string, obj: ICreateScreening) => axionsInstance.put(`/Screening/UpdateScreening/${id}`, obj),
-  createScreening: (obj: ICreateScreening) => axionsInstance.post(`/Screening/CreateScreening`, obj)
+  createScreening: (obj: ICreateScreening) => axionsInstance.post(`/Screening/CreateScreening`, obj),
+  getScreeningsByMovieId: (movieId: string) => axionsInstance.get<IScreening[]>(`/Screening/GetScreeningsByMovieId/${movieId}`)
 }
 
 const Orders = {
@@ -37,6 +39,8 @@ const Orders = {
   getOrderByUserId: (userId: string) => axionsInstance.get(`/Order/GetOrderByUserId/${userId}`),
   getOrders: () => axionsInstance.get('/Order/GetMyOrders'),
   deleteOrder: (id: string) => axionsInstance.delete(`/Order/DeleteOrder/${id}`),
+  createOrder: (order: any) => axionsInstance.post('/Order/CreateOrder', order),
+  createOrderByAnonymus: (email: string, phone: string, order: any) => axionsInstance.post(`/Order/CreateOrderByAnonymous?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`, order),
 }
 
 const Rooms = {
@@ -45,6 +49,10 @@ const Rooms = {
   updateRoom: (id: string, obj: ICreateRoom) => axionsInstance.put(`/Room/UpdateRoom/${id}`, obj),
   deleteRoom: (id: string) => axionsInstance.delete(`/Room/DeleteRoom/${id}`),
   createRoom: (obj: ICreateRoom) => axionsInstance.post(`/Room/CreateRoom`, obj)
+}
+
+const Settings = {
+  getSettings: () => axionsInstance.get<ISetting[]>(`/Admin/GetSettings`)
 }
 
 const Auth = {
@@ -58,7 +66,8 @@ const api = {
   Users,
   Screenings,
   Orders,
-  Rooms
+  Rooms,
+  Settings
 }
 
 export default api;

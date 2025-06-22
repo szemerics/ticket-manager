@@ -17,6 +17,9 @@ namespace TicketManager.DataContext.Dtos
         public decimal ScreeningPrice { get; set; }
         public int RoomId { get; set; }
         public string RoomName { get; set; }
+        public int RowNumber { get; set; }
+        public int ColumnNumber { get; set; }
+
         public List<SeatDto> Seats { get; set; }
     }
     public class  MovieScreeningDto

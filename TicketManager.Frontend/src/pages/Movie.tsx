@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import api from '../api/api'
 import { IMovie } from '../interfaces/IMovie'
-import { Badge, Card, Center, Flex, Text } from '@mantine/core'
+import { Badge, Button, Card, Center, Flex, Text } from '@mantine/core'
 import { Carousel } from '@mantine/carousel';
 import { MovieCard } from '../components/Movies/MovieCards/MovieCard'
 
@@ -13,6 +13,7 @@ interface Category {
 
 const Movie = () => {
   const { id } = useParams()
+  const navigate = useNavigate();
   const [movie, setMovie] = useState<IMovie>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [movies, setMovies] = useState<IMovie[]>([]);
@@ -53,7 +54,7 @@ const Movie = () => {
               </Badge>
             ))}
           </Flex>
-          <Flex gap={20} wrap="wrap" justify={{ base: 'center', sm: 'start' }}>
+          <Flex gap={20} mb={20} wrap="wrap" justify={{ base: 'center', sm: 'start' }}>
             <Card withBorder w={{base : '100%', sm:200}} radius="md" padding="xl" bg="var(--mantine-color-body)">
               <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
                 Release Year
@@ -78,8 +79,9 @@ const Movie = () => {
                   {movie?.minimumAge}
                 </Text>
             </Card>
+            
           </Flex>
-           
+           <Button variant="filled" onClick={() => navigate(`/app/booking/${movie?.id}`)}>Book Now</Button>
         </Flex>
       </Flex>
       

@@ -5,11 +5,12 @@ import Movie from "../pages/Movie.tsx";
 import Profile from "../pages/Profile.tsx";
 import AdminDashboard from "../pages/Admin/AdminDashboard.tsx";
 import AdminMovies from "../pages/Admin/AdminMovies.tsx";
-import { Component } from "react";
 import AdminUsers from "../pages/Admin/AdminUsers.tsx";
 import AdminScreenings from "../pages/Admin/AdminScreenings.tsx";
 import AdminRooms from "../pages/Admin/AdminRooms.tsx";
 import AdminOrders from "../pages/Admin/AdminOrders.tsx";
+import Booking from "../pages/Booking.tsx";
+
 export const routes = [
     {
         path: "login",
@@ -71,5 +72,10 @@ export const routes = [
       path : "admin/orders",
       component: <AdminOrders/>,
       isPrivate: true
-    }
+    },
+    {
+      path: "booking/:movieId",
+      component: <Booking />,
+      isPrivate: false
+    },
 ]

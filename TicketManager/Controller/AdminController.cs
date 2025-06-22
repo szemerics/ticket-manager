@@ -18,6 +18,7 @@ namespace TicketManager.Controller
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<SettingDto>>> GetSettings()
         {
             var settings = await _adminService.GetSettingsAsync();

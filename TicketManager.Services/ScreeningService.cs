@@ -15,7 +15,7 @@ namespace TicketManager.Services
     {
         Task<IEnumerable<ScreeningDto>> GetScreeningsAsync();
         Task<ScreeningDto> GetScreeningByIdAsync(int screeningId);
-        Task<ScreeningDto> GetScreeningByMovieIdAsync(int movieId);
+        Task<IEnumerable<ScreeningDto>> GetScreeningByMovieIdAsync(int movieId);
         Task<ScreeningDto> CreateScreeningAsync(ScreeningCreateDto screening);
         Task<ScreeningDto> UpdateScreeningAsync(int screeningId, ScreeningUpdateDto screening);
         Task<bool> DeleteScreeningAsync(int screeningId);
@@ -120,16 +120,17 @@ namespace TicketManager.Services
             return _mapper.Map<ScreeningDto>(screening);
         }
 
-        public async Task<ScreeningDto> GetScreeningByMovieIdAsync(int movieId)
+        public async Task<IEnumerable<ScreeningDto>> GetScreeningByMovieIdAsync(int movieId)
         {
-            var screening = await _context.Screenings
+            var screenings = await _context.Screenings
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
                 .Include(s => s.Seats)
                 .Include(s => s.Tickets)
-                .FirstOrDefaultAsync(s => s.MovieId == movieId);
+                .Where(s => s.MovieId == movieId)
+                .ToListAsync();
 
-            return _mapper.Map<ScreeningDto>(screening);
+            return _mapper.Map<IEnumerable<ScreeningDto>>(screenings);
         }
 
         public async Task<IEnumerable<ScreeningDto>> GetScreeningsAsync()

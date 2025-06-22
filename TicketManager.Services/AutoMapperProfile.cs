@@ -26,7 +26,11 @@ namespace TicketManager.Services
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ToString()));
 
             // Screening Mappings
-            CreateMap<Screening, ScreeningDto>().ReverseMap();
+            CreateMap<Screening, ScreeningDto>()
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
+                .ForMember(dest => dest.RowNumber, opt => opt.MapFrom(src => src.Room.RowNumber))
+                .ForMember(dest => dest.ColumnNumber, opt => opt.MapFrom(src => src.Room.ColumnNumber))
+                .ReverseMap();
             CreateMap<Screening, MovieScreeningDto>();
             CreateMap<ScreeningCreateDto, Screening>()
                 .ForMember(dest => dest.ScreeningPrice, opt => opt.MapFrom(src => src.ScreeningPrice));
