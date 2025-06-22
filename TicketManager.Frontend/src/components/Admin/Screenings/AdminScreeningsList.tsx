@@ -28,14 +28,17 @@ import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { modals } from '@mantine/modals';
+import { IMovie } from '../../../interfaces/IMovie';
+import { IRoom } from '../../../interfaces/IRoom';
 
-
-interface Category {
+interface Room {
   id: number;
   name: string;
 }
 
 interface RowData {
+  id: number;
+  screeningId: number;
   posterUrl: string;
   title: string;
   screeningTime: string;
@@ -73,7 +76,11 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toString().toLowerCase().includes(query))
+    keys(data[0]).some((key) => {
+      // Skip the id and screeningId fields from search
+      if (key === 'id' || key === 'screeningId') return false;
+      return item[key].toString().toLowerCase().includes(query);
+    })
   );
 }
 
@@ -106,7 +113,8 @@ interface AdminScreeningsListProps {
 
 export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps) {
   const [screenings, setScreenings] = useState<IScreening[]>([]);
-  // const [categories, setCategories] = useState<Category[]>([]);
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState<RowData[]>([]);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -119,6 +127,8 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
     api.Screenings.getAllScreenings().then(res => {
       console.log(res.data);
       const formattedScreenings: RowData[] = res.data.map((screening: IScreening) => ({
+        id: screening.id,
+        screeningId: screening.id,
         posterUrl: screening.movie.posterUrl,
         title: screening.movie.title,
         screeningTime: new Date(screening.screeningTime).toLocaleString('sv-SE', {
@@ -142,21 +152,20 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
 
   useEffect(() => {
     refreshScreenings();
-    // api.Movies.getCategories().then(res => {
-    //   setCategories(res.data);
-    // });
+    // Fetch movies and rooms for the form
+    api.Movies.getMovies().then(res => {
+      setMovies(res.data);
+    });
+
+    api.Rooms.getAllRooms().then(res => {
+      setRooms(res.data)
+    });
   }, []);
 
   useEffect(() => {
     onRefreshRef.current = refreshScreenings;
   }, [onRefreshRef])
   
-
-  // const getCategoryNames = (categoryIds: number[]) => {
-  //   return categoryIds.map(id => 
-  //     categories.find(cat => cat.id === id)?.name || ''
-  //   ).filter(name => name !== '');
-  // };
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -171,78 +180,69 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
     setSortedData(sortData(originalData, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
-  const rows = sortedData.map((row, index) => (
-    <Table.Tr key={row.posterUrl}>
-      <Table.Td><Image src={row.posterUrl} h={75} w={50} fit='fill'/></Table.Td>
-      <Table.Td>{row.title}</Table.Td>
-      <Table.Td>{row.screeningTime}</Table.Td>
-      <Table.Td>
-        <NumberFormatter suffix=" Ft" value={row.screeningPrice} thousandSeparator=" " />
-      </Table.Td>
-      <Table.Td>{row.seats}</Table.Td>
-      <Table.Td>
-        <Flex gap={10}>
-          <ActionIcon>
-            <IconPencil onClick={() => {
-              setSelectedScreening(screenings[index]);
-              open();
-            }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
-          </ActionIcon>
-          <ActionIcon color='red'>
-            <IconTrash onClick={() => {
-              openDeleteModal(screenings[index].id, screenings[index].movie.title)
-            }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
-          </ActionIcon>
-        </Flex>
-      </Table.Td>
-      
-    </Table.Tr>
-  ));
-
-
-  // Year data for Select component
-  // const currentYear = new Date().getFullYear();
-  // const startYear = 1950;
-
-  // const yearOptions = Array.from(
-  //   { length: currentYear - startYear + 1 },
-  //   (_, index) => (startYear + index).toString()
-  // ).reverse();
+  const rows = sortedData.map((row, index) => {
+    // Find the screening by its ID for reliable mapping
+    const screening = screenings.find(s => s.id === row.screeningId);
+    
+    return (
+      <Table.Tr key={`${row.id}-${index}`}>
+        <Table.Td><Image src={row.posterUrl} h={75} w={50} fit='fill'/></Table.Td>
+        <Table.Td>{row.title}</Table.Td>
+        <Table.Td>{row.screeningTime}</Table.Td>
+        <Table.Td>
+          <NumberFormatter suffix=" Ft" value={row.screeningPrice} thousandSeparator=" " />
+        </Table.Td>
+        <Table.Td>{row.seats}</Table.Td>
+        <Table.Td>
+          <Flex gap={10}>
+            <ActionIcon>
+              <IconPencil onClick={() => {
+                if (screening) {
+                  setSelectedScreening(screening);
+                  open();
+                }
+              }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+            </ActionIcon>
+            <ActionIcon color='red'>
+              <IconTrash onClick={() => {
+                if (screening) {
+                  openDeleteModal(screening.id, screening.movie.title)
+                }
+              }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+            </ActionIcon>
+          </Flex>
+        </Table.Td>
+      </Table.Tr>
+    );
+  });
 
 
   // Form for modal
-  // const form = useForm({
-  //   initialValues: {
-  //     posterUrl: '',
-  //     title: '',
-  //     description: '',
-  //     year: '',
-  //     categoryIds: [] as string[],
-  //     lengthInMinutes: 0,
-  //     minimumAge: 0
-  //   },
-  //   validate: {
-  //     title: (value) => (value.length < 2 ? 'Title must have at least 2 letters' : null),
-  //     description: (value) => (value.length < 10 ? 'Description must have at least 10 letters' : null),
-  //     categoryIds: (value) => (value.length === 0 ? 'At least one category must be selected' : null),
-  //     lengthInMinutes: (value) => (value < 1 ? 'Length in minutes must be greater than 0' : null),
-  //     minimumAge: (value) => (value < 0 ? 'Minimum age must be greater than or equal to 0' : null),
-  //   }
-  // });
+  const form = useForm({
+    initialValues: {
+      movieId: '',
+      screeningTime: '',
+      screeningPrice: 0,
+      roomId: ''
+    },
+    validate: {
+      screeningPrice: (value) => (value < 0 ? 'Price must be greater than or equal to 0' : null),
+      screeningTime: (value) => (!value ? 'Screening time is required' : null),
+      movieId: (value) => (!value ? 'Movie is required' : null),
+      roomId: (value) => (!value ? 'Room is required' : null),
+    }
+  });
 
-  // useEffect(() => {
-  //   if (selectedMovie) {
-  //     form.setValues({
-  //       posterUrl: selectedMovie.posterUrl,
-  //       title: selectedMovie.title,
-  //       description: selectedMovie.description,
-  //       year: selectedMovie.year.toString(),
-  //       categoryIds: selectedMovie.categories.map(c => c.toString()),
-  //       lengthInMinutes: selectedMovie.lengthInMinutes,
-  //       minimumAge: selectedMovie.minimumAge
-  //     });
-  //   }
-  // }, [selectedMovie]);
+  useEffect(() => {
+    if (selectedScreening) {
+      form.setValues({
+        movieId: selectedScreening.movieId.toString(),
+        screeningTime: selectedScreening.screeningTime,
+        screeningPrice: selectedScreening.screeningPrice,
+        roomId: selectedScreening.roomId.toString()
+      });
+    }
+  }, [selectedScreening]);
 
 
 // Delete Modal
@@ -266,7 +266,7 @@ const openDeleteModal = (id: number, title: string) => {
       }),
     onConfirm: async () => {
       try {
-        await api.Movies.deleteMovie(String(id));
+        await api.Screenings.deleteScreening(String(id));
         refreshScreenings();
         notifications.show({
           position: 'bottom-center',
@@ -290,36 +290,28 @@ const openDeleteModal = (id: number, title: string) => {
 
   return (
     <>
-      {/* <Modal opened={opened} onClose={close} title="Editing Movie" size="lg">
-        {selectedMovie && (
+      <Modal opened={opened} onClose={close} title="Editing Screening" size="lg">
+        {selectedScreening && (
           <form
             onSubmit={form.onSubmit((values) => {
-              const updated = {
-                ...selectedMovie,
-                ...values,
-                year: Number(values.year),
-              };
-              api.Movies.updateMovie(selectedMovie.id.toString(), {
-                posterUrl: values.posterUrl,
-                title: values.title,
-                year: Number(values.year),
-                description: values.description,
-                lengthInMinutes: values.lengthInMinutes,
-                minimumAge: values.minimumAge,
-                categories: values.categoryIds.map(c => parseInt(c))
+              api.Screenings.updateScreening(selectedScreening.id.toString(), {
+                movieId: parseInt(values.movieId),
+                screeningTime: values.screeningTime,
+                screeningPrice: values.screeningPrice,
+                roomId: parseInt(values.roomId)
               }).then(() => {
-                refreshMovies();
+                refreshScreenings();
                 close();
                 notifications.show({
                   title: 'Success',
-                  message: 'Movie was successfully updated',
+                  message: 'Screening was successfully updated',
                   color: 'green',
                   position: 'bottom-center'
                 });
               }).catch(() => {
                 notifications.show({
                   title: 'Error',
-                  message: 'Failed to update movie',
+                  message: 'Failed to update screening',
                   color: 'red',
                   position: 'bottom-center'
                 });
@@ -327,61 +319,41 @@ const openDeleteModal = (id: number, title: string) => {
             })}
           >
             <Flex gap={'md'} direction={'column'}>
-              <TextInput
-                label="Poster URL"
-                placeholder="Input movie poster URL"
-                {...form.getInputProps('posterUrl')}
-                inputWrapperOrder={['label', 'error', 'input']}
+              <Select
+                label="Movie"
+                placeholder="Select a movie"
+                data={movies.map(movie => ({
+                  label: movie.title,
+                  value: movie.id.toString()
+                }))}
+                searchable
+                {...form.getInputProps('movieId')}
               />
 
               <TextInput
-                label="Title"
-                placeholder="Input movie title"
-                {...form.getInputProps('title')}
-                inputWrapperOrder={['label', 'error', 'input']}
+                label="Screening Time"
+                placeholder="YYYY-MM-DDTHH:mm:ss (e.g., 2025-04-22T18:00:00)"
+                {...form.getInputProps('screeningTime')}
               />
 
-              <Textarea
-                label="Description"
-                placeholder="Input movie description"
-                {...form.getInputProps('description')}
+              <NumberInput
+                label="Price"
+                placeholder="Input screening price"
+                min={0}
+                {...form.getInputProps('screeningPrice')}
               />
 
               <Select
-                label="Year"
-                placeholder="Pick movie year"
-                data={yearOptions}
-                searchable
-                {...form.getInputProps('year')}
-              />
-
-              <NumberInput
-                label="Length in Minutes"
-                placeholder="Input movie length"
-                min={0}
-                {...form.getInputProps('lengthInMinutes')}
-              />
-
-              <NumberInput
-                label="Minimum Age"
-                placeholder="Input minimum age"
-                min={0}
-                {...form.getInputProps('minimumAge')}
-              />
-
-              <MultiSelect
-                label="Movie Categories"
-                placeholder="Pick multiple categories"
-                data={categories.map(c => ({
-                  label: c.name,
-                  value: c.id.toString()
+                label="Room"
+                placeholder="Select a room"
+                data={rooms.map(room => ({
+                  label: room.name,
+                  value: room.id.toString()
                 }))}
                 searchable
-                key= {form.key('categoryIds')}
-                {...form.getInputProps('categoryIds')}
+                {...form.getInputProps('roomId')}
               />
             </Flex>
-           
 
             <Group justify="flex-end" mt="md">
               <Button variant="default" onClick={close}>Cancel</Button>
@@ -389,7 +361,7 @@ const openDeleteModal = (id: number, title: string) => {
             </Group>
           </form>
         )}
-      </Modal> */}
+      </Modal>
 
 
       <ScrollArea>

@@ -1,6 +1,8 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
+import { ICreateScreening } from "../interfaces/ICreateScreening";
 import { IMovie } from "../interfaces/IMovie";
 import { IProfile } from "../interfaces/IProfile";
+import { IRoom } from "../interfaces/IRoom";
 import { IScreening } from "../interfaces/IScreening";
 import axionsInstance from "./axios.config";
 
@@ -19,11 +21,13 @@ const Users = {
   getUserById: (id: string) => axionsInstance.get<IProfile>(`/User/GetUserById/${id}`),
   updateProfile: (obj: IProfile) => axionsInstance.put('/User/UpdateProfile', obj),
   deleteUser: (id: string) => axionsInstance.delete(`/User/DeleteUser/${id}`),
-
 }
 
 const Screenings = {
-  getAllScreenings: () => axionsInstance.get<IScreening[]>('/Screening/GetAllScreenings')
+  getAllScreenings: () => axionsInstance.get<IScreening[]>('/Screening/GetAllScreenings'),
+  deleteScreening: (id: string) => axionsInstance.delete(`/Screening/DeleteScreening/${id}`),
+  updateScreening: (id: string, obj: ICreateScreening) => axionsInstance.put(`/Screening/UpdateScreening/${id}`, obj),
+  createScreening: (obj: ICreateScreening) => axionsInstance.post(`/Screening/CreateScreening`, obj)
 }
 
 const Orders = {
@@ -32,6 +36,11 @@ const Orders = {
   getOrderByUserId: (userId: string) => axionsInstance.get(`/Order/GetOrderByUserId/${userId}`),
   getOrders: () => axionsInstance.get('/Order/GetMyOrders'),
   deleteOrder: (id: string) => axionsInstance.delete(`/Order/DeleteOrder/${id}`),
+}
+
+const Rooms = {
+  getAllRooms: () => axionsInstance.get<IRoom[]>(`/Room/GetAllRooms`),
+  getRoomById: (id: string) => axionsInstance.get<IRoom>(`/Room/GetRoomById/${id}`)
 }
 
 const Auth = {
@@ -44,7 +53,8 @@ const api = {
   Auth,
   Users,
   Screenings,
-  Orders
+  Orders,
+  Rooms
 }
 
 export default api;

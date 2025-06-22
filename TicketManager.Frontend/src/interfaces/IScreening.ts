@@ -4,6 +4,7 @@ export interface IScreening {
   screeningTime: string;
   screeningPrice: number;
   roomId: number;
+  roomName: string,
   movie: {
     id: number;
     title: string;

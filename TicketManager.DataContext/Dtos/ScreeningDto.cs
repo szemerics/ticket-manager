@@ -16,7 +16,7 @@ namespace TicketManager.DataContext.Dtos
         public DateTime ScreeningTime { get; set; }
         public decimal ScreeningPrice { get; set; }
         public int RoomId { get; set; }
-
+        public string RoomName { get; set; }
         public List<SeatDto> Seats { get; set; }
     }
     public class  MovieScreeningDto
@@ -35,6 +35,7 @@ namespace TicketManager.DataContext.Dtos
     {
         public int MovieId { get; set; }
         public DateTime ScreeningTime { get; set; }
+        public decimal? ScreeningPrice { get; set; }
         public int RoomId { get; set; }
     }
 }
