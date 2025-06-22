@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { AdminUsersList } from "../../components/Admin/UserTable/AdminUsersList"
+import { AdminUsersList } from "../../components/Admin/Users/AdminUsersList";
+
 
 const AdminUsers = () => {
 

@@ -8,6 +8,7 @@ import AdminMovies from "../pages/Admin/AdminMovies.tsx";
 import { Component } from "react";
 import AdminUsers from "../pages/Admin/AdminUsers.tsx";
 import AdminScreenings from "../pages/Admin/AdminScreenings.tsx";
+import AdminRooms from "../pages/Admin/AdminRooms.tsx";
 export const routes = [
     {
         path: "login",
@@ -58,6 +59,11 @@ export const routes = [
     {
       path : "admin/screenings",
       component: <AdminScreenings/>,
+      isPrivate: true
+    },
+    {
+      path : "admin/rooms",
+      component: <AdminRooms/>,
       isPrivate: true
     }
 ]

@@ -1,4 +1,5 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
+import { ICreateRoom } from "../interfaces/ICreateRoom";
 import { ICreateScreening } from "../interfaces/ICreateScreening";
 import { IMovie } from "../interfaces/IMovie";
 import { IProfile } from "../interfaces/IProfile";
@@ -40,7 +41,10 @@ const Orders = {
 
 const Rooms = {
   getAllRooms: () => axionsInstance.get<IRoom[]>(`/Room/GetAllRooms`),
-  getRoomById: (id: string) => axionsInstance.get<IRoom>(`/Room/GetRoomById/${id}`)
+  getRoomById: (id: string) => axionsInstance.get<IRoom>(`/Room/GetRoomById/${id}`),
+  updateRoom: (id: string, obj: ICreateRoom) => axionsInstance.put(`/Room/UpdateRoom/${id}`, obj),
+  deleteRoom: (id: string) => axionsInstance.delete(`/Room/DeleteRoom/${id}`),
+  createRoom: (obj: ICreateRoom) => axionsInstance.post(`/Room/CreateRoom`, obj)
 }
 
 const Auth = {
