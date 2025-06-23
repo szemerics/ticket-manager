@@ -1,4 +1,5 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
+import { ICreateProfile } from "../interfaces/ICreateProfile";
 import { ICreateRoom } from "../interfaces/ICreateRoom";
 import { ICreateScreening } from "../interfaces/ICreateScreening";
 import { IMovie } from "../interfaces/IMovie";
@@ -21,7 +22,7 @@ const Users = {
   getProfile: () => axionsInstance.get<IProfile>('/User/GetProfile'),
   getAllUsers: () => axionsInstance.get<IProfile[]>('/User/GetAllUsers'),
   getUserById: (id: string) => axionsInstance.get<IProfile>(`/User/GetUserById/${id}`),
-  updateProfile: (obj: IProfile) => axionsInstance.put('/User/UpdateProfile', obj),
+  updateProfile: (obj: ICreateProfile) => axionsInstance.put('/User/UpdateProfile', obj),
   deleteUser: (id: string) => axionsInstance.delete(`/User/DeleteUser/${id}`),
 }
 

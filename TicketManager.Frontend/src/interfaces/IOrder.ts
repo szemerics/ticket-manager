@@ -7,7 +7,8 @@ export interface IOrder {
     movie: {
       id: number,
       title: string;
-    }
+    },
+    screeningTime: string;
   }
   email: string;
   phone: string;

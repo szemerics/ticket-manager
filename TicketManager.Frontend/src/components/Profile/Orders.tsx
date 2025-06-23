@@ -21,6 +21,8 @@ import { IconEye } from '@tabler/icons-react';
 import api from '../../api/api';
 import { IOrder } from '../../interfaces/IOrder';
 import { useDisclosure } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 
 interface RowData {
   purchaseDate: string;
@@ -148,22 +150,97 @@ export function Orders() {
     );
   }
 
-  const rows = sortedData.map((row, index) => (
-    <Table.Tr key={row.purchaseDate}>
-      <Table.Td>{row.purchaseDate}</Table.Td>
-      <Table.Td>{row.movieTitle}</Table.Td>
-      <Table.Td>{row.ticketsQuantity}</Table.Td>
-      <Table.Td><NumberFormatter value={row.totalPrice} thousandSeparator=" " suffix=' Ft' /></Table.Td>
-      <Table.Td>
-        <ActionIcon>
-          <IconEye onClick={() => {
-            setSelectedOrder(orders[index]);
-            open();
-          }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
-        </ActionIcon>
-      </Table.Td>
-    </Table.Tr>
-  ));
+  const rows = sortedData.map((row, index) => {
+    const screeningTime = new Date(orders[index].screening.screeningTime);
+    const now = new Date();
+    const hoursDiff = (screeningTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    const canDelete = hoursDiff >= 4;
+    return (
+      <Table.Tr key={row.purchaseDate}>
+        <Table.Td>{row.purchaseDate}</Table.Td>
+        <Table.Td>{row.movieTitle}</Table.Td>
+        <Table.Td>{row.ticketsQuantity}</Table.Td>
+        <Table.Td><NumberFormatter value={row.totalPrice} thousandSeparator=" " suffix=' Ft' /></Table.Td>
+        <Table.Td>
+          <ActionIcon>
+            <IconEye onClick={() => {
+              setSelectedOrder(orders[index]);
+              open();
+            }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
+          </ActionIcon>
+          <ActionIcon
+            color="red"
+            ml={8}
+            disabled={!canDelete}
+            onClick={() => {
+              if (canDelete) {
+                openDeleteOrderModal(orders[index].id, orders[index].screening.movie.title);
+              }
+            }}
+            title={canDelete ? 'Delete order' : 'Cannot delete within 4 hours of screening'}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          </ActionIcon>
+        </Table.Td>
+      </Table.Tr>
+    );
+  });
+
+  const openDeleteOrderModal = (orderId: number, movieTitle: string) => {
+    modals.openConfirmModal({
+      title: `Are you sure you want to delete the order for "${movieTitle}"?`,
+      centered: true,
+      children: (
+        <Text size="sm">
+          This action cannot be undone.
+        </Text>
+      ),
+      labels: { confirm: 'Delete', cancel: 'Cancel' },
+      confirmProps: { color: 'red' },
+      onCancel: () =>
+        notifications.show({
+          position: 'bottom-center',
+          title: 'Cancelled',
+          color: 'gray',
+          message: 'Order deletion was cancelled.',
+        }),
+      onConfirm: async () => {
+        try {
+          await api.Orders.deleteOrder(String(orderId));
+          const res = await api.Orders.getOrders();
+          setOrders(res.data);
+          const formattedOrders: RowData[] = res.data.map((order: IOrder) => ({
+            purchaseDate: new Date(order.purchaseDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }),
+            movieTitle: order.screening.movie.title,
+            ticketsQuantity: order.tickets.length,
+            totalPrice: order.totalPrice
+          }));
+          setOriginalData(formattedOrders);
+          setSortedData(formattedOrders);
+          notifications.show({
+            position: 'bottom-center',
+            title: 'Deleted',
+            color: 'red',
+            message: 'Order was successfully deleted.',
+          });
+        } catch (error) {
+          notifications.show({
+            position: 'bottom-center',
+            title: 'Error',
+            color: 'orange',
+            message: 'Failed to delete the order.',
+          });
+          console.error('Delete error:', error);
+        }
+      },
+    });
+  };
 
   return (
     <>
@@ -185,7 +262,9 @@ export function Orders() {
               <Text key={index} mb="xs">
                 <b>Ticket {index + 1}:</b> Row {ticket.seat.row}, Column {ticket.seat.column} - Price: <NumberFormatter value={ticket.price} thousandSeparator=" " suffix=" Ft"/>
               </Text>
+              
             ))}
+            <Text mb="xs"><b>Screening Date:</b> {new Date(selectedOrder.screening.screeningTime).toLocaleString()}</Text>
           </div>
         )}
       </Modal>
