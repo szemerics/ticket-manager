@@ -38,6 +38,25 @@ namespace TicketManager.DataContext.Dtos
         public IList<int> RolesIds { get; set; }
     }
 
+    public class UserRegisterAnonymDto
+    {
+        [Required]
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
+
+        [Required]
+        [Phone]
+        public string Phone { get; set; }
+    }
+
     public class UserLoginDto
     {
         [Required]

@@ -24,6 +24,7 @@ const Users = {
   getUserById: (id: string) => axionsInstance.get<IProfile>(`/User/GetUserById/${id}`),
   updateProfile: (obj: ICreateProfile) => axionsInstance.put('/User/UpdateProfile', obj),
   deleteUser: (id: string) => axionsInstance.delete(`/User/DeleteUser/${id}`),
+  registerAnonym: (obj: { name: string; email: string; password: string; phone: string }) => axionsInstance.post('/User/RegisterAnonym', obj),
 }
 
 const Screenings = {

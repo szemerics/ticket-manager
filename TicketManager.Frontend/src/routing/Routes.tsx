@@ -1,5 +1,5 @@
 import Login from "../pages/Login.tsx";
-import ForgotPassword from "../pages/ForgotPassword.tsx";
+import Register from "../pages/Register.tsx";
 import Home from "../pages/Home.tsx";
 import Movie from "../pages/Movie.tsx";
 import Profile from "../pages/Profile.tsx";
@@ -18,8 +18,8 @@ export const routes = [
         isPrivate: false
     },
     {
-        path: "forgot",
-        component: <ForgotPassword/>,
+        path: "register",
+        component: <Register/>,
         isPrivate: false
     },
     {

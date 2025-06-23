@@ -32,10 +32,18 @@ namespace TicketManager.Controller
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto userDto)
         {
             var result = await _userService.RegisterAsync(userDto);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAnonym([FromBody] UserRegisterAnonymDto userDto)
+        {
+            var result = await _userService.RegisterAnonymAsync(userDto);
             return Ok(result);
         }
 

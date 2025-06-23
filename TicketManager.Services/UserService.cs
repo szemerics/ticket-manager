@@ -25,6 +25,7 @@ namespace TicketManager.Services
 
         // Client functions
         Task<UserDto> RegisterAsync(UserRegisterDto userDto);
+        Task<UserDto> RegisterAnonymAsync(UserRegisterAnonymDto userDto);
         Task<string> LoginAsync(UserLoginDto userDto);
         
         
@@ -190,6 +191,21 @@ namespace TicketManager.Services
                 .Include(u => u.Roles)
                 .Select(u => _mapper.Map<UserDto>(u))
                 .AsEnumerable());
+        }
+
+        public async Task<UserDto> RegisterAnonymAsync(UserRegisterAnonymDto userDto)
+        {
+            var user = _mapper.Map<User>(userDto);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            user.Roles = new List<Role>();
+
+            var defaultRole = await GetDefaultCustomerAsync();
+            user.Roles.Add(defaultRole); // "Customer" role
+   
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

@@ -72,9 +72,9 @@ const Login = () => {
                 </Stack>
 
                 <Group justify="space-between" mt="xl">
-                    <Anchor component="button" type="button" c="dimmed" onClick={() => navigate('/forgot')}
+                    <Anchor component="button" type="button" c="dimmed" onClick={() => navigate('/app/register')}
                             size="xs">
-                        Forgot password?
+                        No account? Sign up here
                     </Anchor>
                     <Button type="submit" radius="xl">
                         Login
