@@ -27,22 +27,16 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
   const [opened, { open, close }] = useDisclosure(false);
   const [active, setActive] = useState(0);
 
-  // Step 1: Movies
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [selectedMovieId, setSelectedMovieId] = useState<string | null>(null);
 
-  // Step 2: Screenings
   const [screenings, setScreenings] = useState<IScreening[]>([]);
   const [selectedScreening, setSelectedScreening] = useState<IScreening | null>(null);
 
-  // Step 3: Tickets & Seats
   const [settings, setSettings] = useState<ISetting[]>([]);
   const [ticketSelections, setTicketSelections] = useState([{ type: '', count: 1 }]);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
 
-  // Step 4: Customer info
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -58,14 +52,11 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
       setSelectedScreening(null);
       setTicketSelections([{ type: '', count: 1 }]);
       setSelectedSeats([]);
-      setEmail('');
-      setPhone('');
       setError(null);
       setSuccess(false);
     }
   }, [opened]);
 
-  // Fetch screenings when movie selected
   useEffect(() => {
     if (selectedMovieId) {
       api.Screenings.getScreeningsByMovieId(selectedMovieId).then(res => {
@@ -94,7 +85,6 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
     }
   }, [settings]);
 
-  // Stepper navigation
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
@@ -107,9 +97,7 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
       setError('Please select the same number of seats as tickets.');
       return;
     }
-    // Map ticket type string to type number (settings.id)
     const typeMap = Object.fromEntries(settings.map(s => [s.key, s.id]));
-    // Flatten tickets: for each selection, count times, assign seat
     const tickets: { type: number, seatId: number }[] = [];
     let seatIdx = 0;
     for (const sel of ticketSelections) {
@@ -145,7 +133,6 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
     <>
       <Modal opened={opened} onClose={close} title="New In-Person Ticket Order" size="xxl">
         <Stepper active={active} onStepClick={setActive}>
-          {/* Step 1: Movie */}
           <Stepper.Step label="Movie" description="Select a movie">
             <Select
               label="Movie"
@@ -159,7 +146,6 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
               <Button onClick={nextStep} disabled={!selectedMovieId}>Next</Button>
             </Group>
           </Stepper.Step>
-          {/* Step 2: Screening */}
           <Stepper.Step label="Screening" description="Select a screening">
             <Flex direction="column" gap={10}>
               {screenings.length === 0 && <Text>No screenings available for this movie.</Text>}
@@ -176,7 +162,6 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
               <Button onClick={nextStep} disabled={!selectedScreening}>Next</Button>
             </Group>
           </Stepper.Step>
-          {/* Step 3: Tickets & Seats */}
           <Stepper.Step label="Tickets & Seats" description="Select ticket types and seats">
             <Flex direction="column" gap={10}>
               {ticketSelections.map((ticketSelection, idx) => {
@@ -211,7 +196,6 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
                   Add new ticket type
                 </Button>
               )}
-              {/* Seat selection */}
               {selectedScreening && (
                 <Flex direction="column" align="center" gap={20} mt={20}>
                   <Text size="md" fw={700} mb={10}>Select seats</Text>
@@ -267,7 +251,6 @@ const CashierCreateOrderModal = ({ onOrderCreated }: CashierCreateOrderModalProp
               <Button onClick={nextStep} disabled={selectedSeats.length !== ticketSelections.reduce((sum, t) => sum + (Number(t.count) || 0), 0) || ticketSelections.some(sel => !sel.type)}>Next</Button>
             </Group>
           </Stepper.Step>
-          {/* Step 4: Overview */}
           <Stepper.Step label="Overview" description="Order summary">
             {selectedScreening && (
               <Flex direction="column" gap={16} align="center">

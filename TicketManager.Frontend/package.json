@@ -11,19 +11,23 @@
   },
   "dependencies": {
     "@mantine/carousel": "^8.0.1",
+    "@mantine/charts": "^8.1.1",
     "@mantine/core": "^7.17.7",
+    "@mantine/dates": "^8.1.1",
     "@mantine/form": "^7.17.7",
     "@mantine/hooks": "^7.17.7",
     "@mantine/modals": "^8.0.1",
     "@mantine/notifications": "^8.0.1",
     "@tabler/icons-react": "^3.31.0",
     "axios": "^1.9.0",
+    "dayjs": "^1.11.13",
     "embla-carousel": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.5.3"
+    "react-router-dom": "^7.5.3",
+    "recharts": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
