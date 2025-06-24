@@ -38,7 +38,7 @@ const Login = () => {
             if (highestRole === 'Admin') {
                 navigate('/admin/dashboard');
             } else if (highestRole === 'Cashier') {
-                navigate('/app/cashier/dashboard');
+                navigate('/cashier/home');
             } else {
                 navigate('/app/home');
             }

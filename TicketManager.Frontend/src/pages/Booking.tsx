@@ -29,7 +29,9 @@ const Booking = () => {
   useEffect(() => {
     if (movieId) {
       api.Screenings.getScreeningsByMovieId(movieId).then(res => {
-        setScreenings(res.data);
+        // Only future screenings
+        const now = new Date();
+        setScreenings(res.data.filter(s => new Date(s.screeningTime) > now));
       })
     }
 
@@ -67,7 +69,7 @@ const Booking = () => {
             <Flex direction={'column'} align={'center'} gap={10}>
               <Text size="xl" mb={10} fw={700}>Select a Screening</Text>
               {screenings.map(screening => (
-                <Card miw={300} key={screening.id} style={{ backgroundColor: '#f1f3f5'}}>
+                <Card miw={500} key={screening.id} shadow="sm" padding="md" mb={10} style={{ backgroundColor: '#fff', border: '1px', borderStyle: 'solid', borderColor: '#f8f9fa' }}>
                   <Text>Time: {new Date(screening.screeningTime).toLocaleString()}</Text>
                   <Text>Room: {screening.roomName}</Text>
                   <Button onClick={() => {

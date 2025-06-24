@@ -1,7 +1,7 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 import BasicLayout from "../components/Layout/BasicLayout/BasicLayout.tsx";
 import AdminLayout from "../components/Layout/AdminLayout/AdminLayout.tsx";
-import CashierLayout from "../components/Layout/CashierLayout.tsx";
+import CashierLayout from "../components/Layout/CashierLayout/CashierLayout.tsx";
 import {routes} from "./Routes.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 

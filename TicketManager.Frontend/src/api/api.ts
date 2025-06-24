@@ -1,4 +1,5 @@
 import { ICreateMovie } from "../interfaces/ICreateMovie";
+import { ICreateOrderByCashier } from "../interfaces/ICreateOrderByCashier";
 import { ICreateProfile } from "../interfaces/ICreateProfile";
 import { ICreateRoom } from "../interfaces/ICreateRoom";
 import { ICreateScreening } from "../interfaces/ICreateScreening";
@@ -43,6 +44,7 @@ const Orders = {
   deleteOrder: (id: string) => axionsInstance.delete(`/Order/DeleteOrder/${id}`),
   createOrder: (order: any) => axionsInstance.post('/Order/CreateOrder', order),
   createOrderByAnonymus: (email: string, phone: string, order: any) => axionsInstance.post(`/Order/CreateOrderByAnonymous?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`, order),
+  createOrderByCashier: (obj: ICreateOrderByCashier) => axionsInstance.post(`/Order/CreateOrderByCashier`, obj),
 }
 
 const Rooms = {

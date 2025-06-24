@@ -10,6 +10,7 @@ import AdminScreenings from "../pages/Admin/AdminScreenings.tsx";
 import AdminRooms from "../pages/Admin/AdminRooms.tsx";
 import AdminOrders from "../pages/Admin/AdminOrders.tsx";
 import Booking from "../pages/Booking.tsx";
+import Cashier from "../pages/Cashier.tsx";
 
 export const routes = [
     {
@@ -77,5 +78,10 @@ export const routes = [
       path: "booking/:movieId",
       component: <Booking />,
       isPrivate: false
+    },
+    {
+      path: "cashier/home",
+      component: <Cashier />,
+      isPrivate: true
     },
 ]
