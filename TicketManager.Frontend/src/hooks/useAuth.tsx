@@ -53,7 +53,7 @@ const useAuth = () => {
 
     }, []);
 
-    return {login, logout, loginKata, token, email, isLoggedIn};
+    return {login, logout, loginKata, token, email, isLoggedIn, roles};
 }
 
 export default useAuth;

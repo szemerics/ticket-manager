@@ -53,7 +53,7 @@ const Routing = () => {
                     key={route.path}
                     path={route.path.replace('admin/', '')}
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute requiredRole="Admin">
                             {route.component}
                         </ProtectedRoute>
                     }

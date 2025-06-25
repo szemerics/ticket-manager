@@ -67,8 +67,13 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
+  if (!query || !data || data.length === 0) return data;
+  
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toString().toLowerCase().includes(query))
+    keys(data[0]).some((key) => {
+      const value = item[key];
+      return value !== null && value !== undefined && value.toString().toLowerCase().includes(query);
+    })
   );
 }
 
@@ -321,7 +326,7 @@ const openDeleteModal = (id: number, title: string) => {
               rows
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={5}>
+                <Table.Td colSpan={7}>
                   <Text fw={500} ta="center" w={'100%'}>
                     Nothing found
                   </Text>

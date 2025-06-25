@@ -208,7 +208,7 @@ namespace TicketManager.Services
                 // Creating the order
                 var order = _mapper.Map<Order>(orderDto);
                 order.UserId = null;
-                order.Email = null;
+                order.Email = "madeby@cashier.com";
                 order.Phone = null;
                 order.PurchaseDate = DateTime.UtcNow;
                 order.Tickets = orderDto.Tickets

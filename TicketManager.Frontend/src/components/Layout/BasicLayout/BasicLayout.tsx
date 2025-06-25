@@ -16,7 +16,7 @@ export function BasicLayout() {
     if (highestRole === 'Admin') {
       navigate('/admin/dashboard');
     } else if (highestRole === 'Cashier') {
-      navigate('/cashier');
+      navigate('/cashier/home');
     }
 
 

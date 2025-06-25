@@ -305,7 +305,7 @@ const openDeleteModal = (id: number, title: string) => {
               rows
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={4}>
+                <Table.Td colSpan={5}>
                   <Text fw={500} ta="center" w={'100%'}>
                     Nothing found
                   </Text>

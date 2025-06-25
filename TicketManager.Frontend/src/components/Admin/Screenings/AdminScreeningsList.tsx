@@ -44,6 +44,7 @@ interface RowData {
   screeningTime: string;
   screeningPrice: number;
   seats: string; // for example 25/50
+  room: string;
 }
 
 // Table Settings from Mantine
@@ -141,8 +142,9 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
         }).replace(',', ''),
         screeningPrice: screening.screeningPrice,
         // "Reserved seat[].length / all seat[].length"
-        seats: `${screening.seats.filter(seat => seat.isReserved).length}/${screening.seats.length}`
+        seats: `${screening.seats.filter(seat => seat.isReserved).length}/${screening.seats.length}`,
         // seats: screening.seats.length.toString()
+        room: screening.roomName
       }));
       setScreenings(res.data);
       setOriginalData(formattedScreenings);
@@ -193,6 +195,7 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
           <NumberFormatter suffix=" Ft" value={row.screeningPrice} thousandSeparator=" " />
         </Table.Td>
         <Table.Td>{row.seats}</Table.Td>
+        <Table.Td>{row.room}</Table.Td>
         <Table.Td>
           <Flex gap={10}>
             <ActionIcon>
@@ -406,6 +409,13 @@ const openDeleteModal = (id: number, title: string) => {
               >
                 Seats
               </Th>
+              <Th
+                sorted={sortBy === 'room'}
+                reversed={reverseSortDirection}
+                onSort={() => setSorting('room')}
+              >
+                Room
+              </Th>
               <Table.Th>
                 Actions
               </Table.Th>
@@ -416,7 +426,7 @@ const openDeleteModal = (id: number, title: string) => {
               rows
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={4}>
+                <Table.Td colSpan={7}>
                   <Text fw={500} ta="center" w={'100%'}>
                     Nothing found
                   </Text>

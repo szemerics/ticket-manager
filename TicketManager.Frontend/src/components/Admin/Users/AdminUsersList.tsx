@@ -114,7 +114,6 @@ export function AdminUsersList( { onRefreshRef }: AdminUsersListProps) {
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [originalData, setOriginalData] = useState<RowData[]>([]);
   const [selectedUser, setSelectedUser] = useState<IProfile | null>(null);
-  const [opened, { open, close }] = useDisclosure(false);
 
   const refreshUsers = () => {
     api.Users.getAllUsers().then(res => {
@@ -166,12 +165,6 @@ export function AdminUsersList( { onRefreshRef }: AdminUsersListProps) {
       <Table.Td>{row.phone}</Table.Td>
       <Table.Td>
         <Flex gap={10}>
-          <ActionIcon>
-            <IconPencil onClick={() => {
-              setSelectedUser(users[index]);
-              open();
-            }} style={{ width: '70%', height: '70%' }} stroke={1.5}/>
-          </ActionIcon>
           <ActionIcon color='red'>
             <IconTrash onClick={() => {
               openDeleteModal(users[index].id, users[index].name);
@@ -182,42 +175,6 @@ export function AdminUsersList( { onRefreshRef }: AdminUsersListProps) {
       
     </Table.Tr>
   ));
-
-
-  // // Year data for Select component
-  // const currentYear = new Date().getFullYear();
-  // const startYear = 1950;
-
-  // const yearOptions = Array.from(
-  //   { length: currentYear - startYear + 1 },
-  //   (_, index) => (startYear + index).toString()
-  // ).reverse();
-
-
-  // Form for modal
-  const form = useForm({
-    initialValues: {
-      name: '',
-      email: '',
-      phone: '',
-    },
-    validate: {
-      name: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email format'),
-      phone: (value) => (/^\+?[0-9\s]+$/.test(value) ? null : 'Invalid phone number format'),
-    }
-  });
-
-  useEffect(() => {
-    if (selectedUser) {
-      form.setValues({
-
-        name: selectedUser.name,
-        email: selectedUser.email,
-        phone: selectedUser.phone,
-      });
-    }
-  }, [selectedUser]);
 
 
 // Delete Modal
@@ -265,73 +222,6 @@ const openDeleteModal = (id: number, name: string) => {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Editing User" size="lg">
-        {selectedUser && (
-          <form
-            onSubmit={form.onSubmit((values) => {
-              const updated = {
-                ...selectedUser,
-                ...values,
-              };
-              api.Users.updateProfile( {
-                id: selectedUser.id,
-                name: values.name,
-                email: values.email,
-                phone: values.phone,
-                roles: selectedUser.roles,
-              }).then(() => {
-                refreshUsers();
-                close();
-                notifications.show({
-                  title: 'Success',
-                  message: 'User was successfully updated',
-                  color: 'green',
-                  position: 'bottom-center'
-                });
-              }).catch(() => {
-                notifications.show({
-                  title: 'Error',
-                  message: 'Failed to update user',
-                  color: 'red',
-                  position: 'bottom-center'
-                });
-              });
-            })}
-          >
-            <Flex gap={'md'} direction={'column'}>
-
-              <TextInput
-                label="Name"
-                placeholder="Input user name"
-                {...form.getInputProps('name')}
-                inputWrapperOrder={['label', 'error', 'input']}
-              />
-
-              <TextInput
-                label="Email"
-                placeholder="Input user email"
-                {...form.getInputProps('email')}
-                inputWrapperOrder={['label', 'error', 'input']}
-              />
-
-              <TextInput
-                label="Phone"
-                placeholder="Input user phone"
-                {...form.getInputProps('phone')}
-                inputWrapperOrder={['label', 'error', 'input']}
-              />
-            </Flex>
-           
-
-            <Group justify="flex-end" mt="md">
-              <Button variant="default" onClick={close}>Cancel</Button>
-              <Button type="submit">Save</Button>
-            </Group>
-          </form>
-        )}
-      </Modal>
-
-
       <ScrollArea>
         <TextInput
           placeholder="Search by any field"
