@@ -18,6 +18,7 @@ import { notifications } from '@mantine/notifications';
 import { IRoom } from '../../../interfaces/IRoom.ts';
 import { IMovie } from '../../../interfaces/IMovie.ts';
 import React from 'react';
+import { DateTimePicker } from '@mantine/dates';
 
 interface Room {
   id: number;
@@ -33,19 +34,10 @@ const CreateScreeningModal = ({ onScreeningCreated: onScreeningCreated }: Create
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [movies, setMovies] = useState<IMovie[]>([]);
 
-  useEffect(() => {
-    api.Rooms.getAllRooms().then(res => {
-      setRooms(res.data);
-    });
-    api.Movies.getMovies().then(res => {
-      setMovies(res.data);
-    })
-  }, []);
-  
   const form = useForm({
     initialValues: {
       movieId: '',
-      screeningTime: '',
+      screeningTime: null as Date | null,
       screeningPrice: 0,
       roomId: ''
     },
@@ -57,7 +49,20 @@ const CreateScreeningModal = ({ onScreeningCreated: onScreeningCreated }: Create
     }
   });
 
-
+  useEffect(() => {
+    api.Rooms.getAllRooms().then(res => {
+      setRooms(res.data);
+    });
+    api.Movies.getMovies().then(res => {
+      setMovies(res.data);
+    })
+  }, []);
+  
+  useEffect(() => {
+    if (form.values.screeningTime && typeof form.values.screeningTime === 'string') {
+      form.setFieldValue('screeningTime', new Date(form.values.screeningTime));
+    }
+  }, [form.values.screeningTime]);
 
   return (
     <>
@@ -65,9 +70,19 @@ const CreateScreeningModal = ({ onScreeningCreated: onScreeningCreated }: Create
         {(
           <form
             onSubmit={form.onSubmit((values) => {
+              let screeningTime: Date | null = null;
+              if (values.screeningTime instanceof Date) {
+                screeningTime = values.screeningTime;
+              } else if (typeof values.screeningTime === 'string' && values.screeningTime) {
+                screeningTime = new Date(values.screeningTime);
+              }
+              const pad = (n: number) => n.toString().padStart(2, '0');
+              const localString = screeningTime
+                ? `${screeningTime.getFullYear()}-${pad(screeningTime.getMonth() + 1)}-${pad(screeningTime.getDate())}T${pad(screeningTime.getHours())}:${pad(screeningTime.getMinutes())}:00`
+                : '';
               api.Screenings.createScreening({
                 movieId: parseInt(values.movieId),
-                screeningTime: values.screeningTime,
+                screeningTime: localString,
                 screeningPrice: values.screeningPrice,
                 roomId: parseInt(values.roomId)
               }).then(() => {
@@ -101,10 +116,14 @@ const CreateScreeningModal = ({ onScreeningCreated: onScreeningCreated }: Create
                 {...form.getInputProps('movieId')}
               />
 
-              <TextInput
+              <DateTimePicker
                 label="Screening Time"
-                placeholder="YYYY-MM-DDTHH:mm:ss (e.g., 2025-04-22T18:00:00)"
-                {...form.getInputProps('screeningTime')}
+                placeholder="Pick date and time"
+                value={form.values.screeningTime ?? null}
+                onChange={(date) => form.setFieldValue('screeningTime', date)}
+                style={{ width: '100%' }}
+                required
+                clearable={false}
               />
 
               <NumberInput

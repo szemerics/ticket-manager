@@ -21,6 +21,7 @@ import {
   NumberInput,
   NumberFormatter,
 } from '@mantine/core';
+import { DateTimePicker } from '@mantine/dates';
 import classes from './AdminScreeningsList.module.css';
 import { IScreening } from '../../../interfaces/IScreening';
 import api from '../../../api/api';
@@ -126,20 +127,12 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
 
   const refreshScreenings = () => {
     api.Screenings.getAllScreenings().then(res => {
-      console.log(res.data);
       const formattedScreenings: RowData[] = res.data.map((screening: IScreening) => ({
         id: screening.id,
         screeningId: screening.id,
         posterUrl: screening.movie.posterUrl,
         title: screening.movie.title,
-        screeningTime: new Date(screening.screeningTime).toLocaleString('sv-SE', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        }).replace(',', ''),
+        screeningTime: new Date(screening.screeningTime).toLocaleString(),
         screeningPrice: screening.screeningPrice,
         // "Reserved seat[].length / all seat[].length"
         seats: `${screening.seats.filter(seat => seat.isReserved).length}/${screening.seats.length}`,
@@ -224,7 +217,7 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
   const form = useForm({
     initialValues: {
       movieId: '',
-      screeningTime: '',
+      screeningTime: null as Date | null,
       screeningPrice: 0,
       roomId: ''
     },
@@ -240,7 +233,9 @@ export function AdminScreeningsList( { onRefreshRef }: AdminScreeningsListProps)
     if (selectedScreening) {
       form.setValues({
         movieId: selectedScreening.movieId.toString(),
-        screeningTime: selectedScreening.screeningTime,
+        screeningTime: selectedScreening.screeningTime && typeof selectedScreening.screeningTime === 'string'
+          ? new Date(selectedScreening.screeningTime)
+          : (typeof selectedScreening.screeningTime === 'object' && selectedScreening.screeningTime !== null ? selectedScreening.screeningTime : null),
         screeningPrice: selectedScreening.screeningPrice,
         roomId: selectedScreening.roomId.toString()
       });
@@ -297,9 +292,19 @@ const openDeleteModal = (id: number, title: string) => {
         {selectedScreening && (
           <form
             onSubmit={form.onSubmit((values) => {
+              let screeningTime: Date | null = null;
+              if (values.screeningTime instanceof Date) {
+                screeningTime = values.screeningTime;
+              } else if (typeof values.screeningTime === 'string' && values.screeningTime) {
+                screeningTime = new Date(values.screeningTime);
+              }
+              const pad = (n: number) => n.toString().padStart(2, '0');
+              const localString = screeningTime
+                ? `${screeningTime.getFullYear()}-${pad(screeningTime.getMonth() + 1)}-${pad(screeningTime.getDate())}T${pad(screeningTime.getHours())}:${pad(screeningTime.getMinutes())}:00`
+                : '';
               api.Screenings.updateScreening(selectedScreening.id.toString(), {
                 movieId: parseInt(values.movieId),
-                screeningTime: values.screeningTime,
+                screeningTime: localString,
                 screeningPrice: values.screeningPrice,
                 roomId: parseInt(values.roomId)
               }).then(() => {
@@ -333,10 +338,18 @@ const openDeleteModal = (id: number, title: string) => {
                 {...form.getInputProps('movieId')}
               />
 
-              <TextInput
+              <DateTimePicker
                 label="Screening Time"
-                placeholder="YYYY-MM-DDTHH:mm:ss (e.g., 2025-04-22T18:00:00)"
-                {...form.getInputProps('screeningTime')}
+                placeholder="Pick date and time"
+                value={
+                  form.values.screeningTime && typeof form.values.screeningTime === 'string'
+                    ? new Date(form.values.screeningTime)
+                    : (typeof form.values.screeningTime === 'object' && form.values.screeningTime !== null ? form.values.screeningTime : null)
+                }
+                onChange={(date) => form.setFieldValue('screeningTime', date)}
+                style={{ width: '100%' }}
+                required
+                clearable={false}
               />
 
               <NumberInput

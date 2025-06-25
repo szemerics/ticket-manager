@@ -11,6 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext.tsx';
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
+import { DatesProvider } from '@mantine/dates';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem(tokenKeyName));
@@ -19,14 +20,16 @@ function App() {
 
   return (
   <MantineProvider theme={theme}>
-    <ModalsProvider>
-      <Notifications />
-      <BrowserRouter>
-        <AuthContext.Provider value={{ token, setToken, email, setEmail, roles, setRoles }}>
-          <Routing />
-        </AuthContext.Provider>
-      </BrowserRouter>
-    </ModalsProvider>
+    <DatesProvider settings={{}}>
+      <ModalsProvider>
+        <Notifications />
+        <BrowserRouter>
+          <AuthContext.Provider value={{ token, setToken, email, setEmail, roles, setRoles }}>
+            <Routing />
+          </AuthContext.Provider>
+        </BrowserRouter>
+      </ModalsProvider>
+    </DatesProvider>
   </MantineProvider>
 );
 
